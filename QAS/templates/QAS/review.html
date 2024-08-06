@@ -1,0 +1,34 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}"/>
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <script src="https://unpkg.com/ionicons@4.1.2/dist/ionicons.js"></script>
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+</head>
+    
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>{{ store_name }} アンケート</h1>
+            <p>アンケートのご協力お願いいたします（所要時間1分）</p>
+        </div>
+        <form method="post">
+            {% csrf_token %}
+            <div class="question">
+                <label>{{ question_title }}</label><br>
+                <div class="radio-group">
+                    <label><input type="radio" name="satisfaction" value="very_satisfied">{{ very_satisfied_label }}</label>
+                    <label><input type="radio" name="satisfaction" value="satisfied">{{ satisfied_label }}</label>
+                    <label><input type="radio" name="satisfaction" value="neutral">{{ neutral_label }}</label>
+                    <label><input type="radio" name="satisfaction" value="dissatisfied">{{ dissatisfied_label }}</label>
+                    <label><input type="radio" name="satisfaction" value="very_dissatisfied">{{ very_dissatisfied_label }}</label>
+                </div>
+            </div>
+            <button type="submit" class="btn">次へ</button>
+        </form>
+    </div>
+</body>
+</html>

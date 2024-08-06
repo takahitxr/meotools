@@ -1,0 +1,78 @@
+{% extends "QAS/base.html" %}
+
+{% block title %}設定ページ{% endblock %}
+
+{% block content %}
+
+{% load static %}
+
+<h1>質問内容の設定</h1>
+<div class="container">
+    <h2>改善点ページの質問項目</h2>
+    <form method="post">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="question_title">改善点ページのタイトル</label>
+            <div class="improve-setting-group">
+                {{ form.question_title }}
+            </div>
+            <label>改善点ページで質問したい内容を記入してください。</label>
+            <div class="improve-setting-group">
+                <label for="question_text1">質問内容1</label>
+                {{ form.question_text1 }}
+                <label for="is_required1" class="required-label">必須1</label>
+                {{ form.is_required1 }}
+            </div>
+            <div class="improve-setting-group">
+                <label for="question_text2">質問内容2</label>
+                {{ form.question_text2 }}
+                <label for="is_required2" class="required-label">必須2</label>
+                {{ form.is_required2 }}
+            </div>
+            <div class="improve-setting-group">
+                <label for="question_text3">質問内容3</label>
+                {{ form.question_text3 }}
+                <label for="is_required3" class="required-label">必須3</label>
+                {{ form.is_required3 }}
+            </div>
+            <div class="improve-setting-group">
+                <label for="question_text4">質問内容4</label>
+                {{ form.question_text4 }}
+                <label for="is_required4" class="required-label">必須4</label>{{ form.is_required4 }}
+            </div>
+            <div class="improve-setting-group">
+                <label for="question_text5">質問内容5</label>
+                {{ form.question_text5 }}
+                <label for="is_required5" class="required-label">必須5</label>
+                {{ form.is_required5 }}
+            </div>
+        </div>
+        <button type="submit" name="save_improvements" class="button">改善点を保存</button>
+    </form>
+    {% if messages %}
+            <div id="message-container">
+                {% for message in messages %}
+                    <div class="message {{ message.tags }}">{{ message }}</div>
+                {% endfor %}
+            </div>
+    {% endif %}
+
+    {% if form.errors %}
+        <div class="form-errors">
+            <h3>フォームエラー</h3>
+            {{ form.errors }}
+        </div>
+    {% endif %}
+</div>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var messageContainer = document.getElementById('message-container');
+        if (messageContainer) {
+            setTimeout(function () {
+                messageContainer.style.display = 'none';
+            }, 3000); // 3秒後にメッセージを非表示にする
+        }
+    });
+</script>
+
+{% endblock %}

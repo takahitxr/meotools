@@ -1,0 +1,36 @@
+{% extends "QAS/base.html" %}
+
+{% block title %}店舗名の変更{% endblock %}
+
+{% block content %}
+<h1>店舗名の変更</h1>
+<form method="post">
+    {% csrf_token %}
+    <div class="form-group">
+        <label>店舗名</label>
+        {{ form.store_name  }}
+    </div>
+    <div class="form-group">
+        <label>Google店舗レビューURL</label>
+        {{ form.google_review_url  }}
+    </div>
+    <button type="submit" class="button">保存</button>
+</form>
+    {% if messages %}
+    <div id="message-container">
+        {% for message in messages %}
+            <div class="message {{ message.tags }}">{{ message }}</div>
+        {% endfor %}
+    </div>
+    {% endif %}
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var messageContainer = document.getElementById('message-container');
+        if (messageContainer) {
+            setTimeout(function () {
+                messageContainer.style.display = 'none';
+            }, 3000); // 3秒後にメッセージを非表示にする
+        }
+    });
+</script>
+{% endblock %}

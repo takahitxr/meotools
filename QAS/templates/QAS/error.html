@@ -1,0 +1,9 @@
+{% extends "QAS/base.html" %}
+
+{% block title %}エラーページ{% endblock %}
+
+{% block content %}
+<h1>エラーが発生しました。</h1>
+<p>{{ error_message }}</p>
+<a href="{{ redirect_url }}">設定ページに移動</a>
+{% endblock %}

@@ -1,0 +1,37 @@
+<html lang="ja">
+<head>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/kanri.css' %}"/>
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <title>{% block title %}QAS{% endblock %}</title>
+</head>
+<body>
+    <div class="sidebar">
+        <h2>メニュー</h2>
+        <ul>
+            <li><a href="{% url 'kanri' %}">レビュー結果</a></li>
+            <li><a href="{% url 'improve_result_list' %}">改善点のアンケート結果</a></li>
+            <li class="menu-item has-submenu">
+                <a href="#">設定</a>
+                <ul class="submenu">
+                    <li><a href="{% url 'name_setting' %}">店舗名の設定</a></li>
+                    <li><a href="{% url 'user_settings' %}">質問内容の設定</a></li>
+                    <li><a href="{% url 'improve_settings' %}">改善点ページの設定</a></li>
+                </ul>
+            </li>
+            <li><a href="{% url 'review_form' store_code=store_code %}">レビュー画面プレビュー</a></li>
+
+            <li><a href="{% url 'logout' %}">ログアウト</a></li>
+            <div>
+                Store code: {{ store_code }}
+            </div>
+        </ul>
+    </div>
+    <div class="main-content">
+        {% block content %}
+        {% endblock %}
+    </div>
+    <script src="https://unpkg.com/ionicons@4.1.2/dist/ionicons.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+</body>
+</html>

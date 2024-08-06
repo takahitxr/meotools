@@ -1,0 +1,69 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}"/>
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <script src="https://unpkg.com/ionicons@4.1.2/dist/ionicons.js"></script>
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+</head>
+    
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>改善点を教えてください。</h1>
+            <p>アンケートのご協力お願いいたします（所要時間1分）</p>
+        </div>
+        <form method="post">
+            {% csrf_token %}
+            <div class="question">
+                <div class="radio-group">
+                    {% if question_text1 %}
+                    <label>
+                        {{ question_text1 }} 
+                        {% if is_required1 %} <span style="color: red;">*</span> {% endif %}
+                        <br>
+                        <textarea class="large-textarea" name="question1_response" {% if is_required1 %}required{% endif %}></textarea>
+                    </label>
+                    {% endif %}
+                    
+                    {% if question_text2 %}
+                        <label>
+                            {{ question_text2 }} 
+                            {% if is_required2 %} <span style="color: red;">*</span> {% endif %}
+                            <br>
+                            <textarea class="large-textarea" name="question2_response" {% if is_required2 %}required{% endif %}></textarea>
+                        </label>
+                    {% endif %}
+                    {% if question_text3 %}
+                        <label>
+                            {{ question_text3 }} 
+                            {% if is_required3 %} <span style="color: red;">*</span> {% endif %}
+                            <br>
+                            <textarea class="large-textarea" name="question3_response" {% if is_required3 %}required{% endif %}></textarea>
+                        </label>
+                    {% endif %}
+                    {% if question_text4 %}
+                        <label>
+                            {{ question_text4 }} 
+                            {% if is_required4 %} <span style="color: red;">*</span> {% endif %}
+                            <br>
+                            <textarea class="large-textarea" name="question4_response" {% if is_required4 %}required{% endif %}></textarea>
+                        </label>
+                    {% endif %}
+                    {% if question_text5 %}
+                        <label>
+                            {{ question_text5 }} 
+                            {% if is_required5 %} <span style="color: red;">*</span> {% endif %}
+                            <br>
+                            <textarea class="large-textarea" name="question5_response" {% if is_required5 %}required{% endif %}></textarea>
+                        </label>
+                    {% endif %}
+                </div>
+            </div>
+            <button type="submit" class="btn">次へ</button>
+        </form>
+    </div>
+</body>
+</html>

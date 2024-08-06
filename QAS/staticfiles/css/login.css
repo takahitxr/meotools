@@ -1,0 +1,87 @@
+/* QAS/static/css/login.css */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f5f5f5; /* 他のページの背景色に合わせる */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+}
+
+.login-container {
+    background-color: #ffffff;
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    width: 100%;
+    max-width: 400px;
+}
+
+.login-logo img {
+    width: 150px;
+    margin-bottom: 1rem;
+}
+
+h2 {
+    margin-bottom: 1.5rem;
+    color: #333333; /* 他のページのテキストカラーに合わせる */
+}
+
+.form-group {
+    margin-bottom: 1rem;
+    text-align: left;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    color: #333333; /* 他のページのテキストカラーに合わせる */
+}
+
+.form-group input[type="text"],
+.form-group input[type="password"] {
+    width: 100%;
+    padding: 0.5rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+.form-group input[type="checkbox"] {
+    margin-right: 0.5rem;
+}
+
+.login-button {
+    background-color: #007bff; /* 他のページのボタンカラーに合わせる */
+    color: #fff;
+    border: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: 4px;
+    cursor: pointer;
+    width: 100%;
+    font-size: 1rem;
+}
+
+.login-button:hover {
+    background-color: #0056b3; /* 他のページのホバーカラーに合わせる */
+}
+
+.form-links {
+    margin-top: 1rem;
+}
+
+.form-links a {
+    color: #007bff; /* 他のページのリンクカラーに合わせる */
+    text-decoration: none;
+}
+
+.form-links a:hover {
+    text-decoration: underline;
+}
+
+.keep-group {
+    margin-bottom: 1rem;
+    text-align: left;
+    white-space: nowrap;
+}

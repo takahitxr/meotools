@@ -1,0 +1,38 @@
+{% extends "QAS/base.html" %}
+
+{% block title %}改善点の結果{% endblock %}
+
+{% block content %}
+
+<h1>改善点の結果</h1>
+<div class="dashboard-container">
+    <div class="review-table-section">
+        <h2>改善点の回答一覧</h2>
+        <table class="review-table">
+            <thead>
+                <tr>
+                    <th>日付</th>
+                    <th>{{ improve_setting.question_text1 }}</th>
+                    <th>{{ improve_setting.question_text2 }}</th>
+                    <th>{{ improve_setting.question_text3 }}</th>
+                    <th>{{ improve_setting.question_text4 }}</th>
+                    <th>{{ improve_setting.question_text5 }}</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for result in improve_results %}
+                <tr>
+                    <td>{{ result.created_at }}</td>
+                    <td>{{ result.question_text1 }}</td>
+                    <td>{{ result.question_text2 }}</td>
+                    <td>{{ result.question_text3 }}</td>
+                    <td>{{ result.question_text4 }}</td>
+                    <td>{{ result.question_text5 }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,28 @@
+{% load static %}
+
+<!-- QAS/templates/QAS/fail.html -->
+<!DOCTYPE html>
+<html lang="ja">
+    <head>
+        <link rel="stylesheet" href="{% static 'css/style.css' %}"/>
+        <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+        <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    </head>
+<body>
+    <div class="fail-container">
+        <div class="fail-header">
+            <h1>アンケート</h1>
+        </div>
+        <div class="fail-message">
+            <p>ご意見をお聞かせいただきありがとうございます。</p>
+            <p>数秒後にフィードバックページに遷移します。</p>
+        </div>
+        <button class="fail-button" onclick="window.location.href='/feedback/'">フィードバックフォームへ</button>
+    </div>
+    <script>
+        setTimeout(function() {
+            window.location.href = '/feedback/';
+        }, 3000);  // 5秒後にフィードバックページにリダイレクト
+    </script>
+</body>
+</html>
