@@ -25,10 +25,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-=!er_ha5k)4)n_v7v^#jp_*l((1=f-1l6_n80m9a+d9h#+f_ds'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-# ALLOWED_HOSTS = ["QAS.herokuapp.com"]
-ALLOWED_HOSTS = ['qas.herokuapp.com']
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost']
 
 # Application definition
 
@@ -55,7 +54,7 @@ MIDDLEWARE = [
 ROOT_URLCONF = 'google_question.urls'
 
 LOGIN_URL = '/login/'
-LOGIN_REDIRECT_URL = '/kanri/'
+LOGIN_REDIRECT_URL = '/name_setting/'
 LOGOUT_REDIRECT_URL = '/login/'
 
 SESSION_COOKIE_AGE = 1209600  # 2週間 (秒数)
@@ -142,3 +141,22 @@ STATICFILES_DIRS = (
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 django_heroku.settings(locals())
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'file': {
+            'level': 'DEBUG',
+            'class': 'logging.FileHandler',
+            'filename': 'debug.log',
+        },
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['file'],
+            'level': 'DEBUG',
+            'propagate': True,
+        },
+    },
+}

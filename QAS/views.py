@@ -13,15 +13,28 @@ from django.contrib.auth import login
 from django.utils import timezone
 from django.contrib import messages
 
+
 class KanriView(LoginRequiredMixin, TemplateView):
     template_name = 'QAS/kanri.html'
     login_url = 'login'
     model = ShopReview
 
+    def dispatch(self, request, *args, **kwargs):
+        self.store_code = kwargs.get('store_code')
+        return super().dispatch(request, *args, **kwargs)
+
     def get_context_data(self, **kwargs):
-        
         context = super().get_context_data(**kwargs)
-        reviews = ShopReview.objects.order_by("-created_at").all()
+        store_code = self.store_code
+        try:
+            user_profile = UserProfile.objects.get(store_code=store_code)
+        except UserProfile.DoesNotExist:
+            context['error_message'] = 'ストアコードが存在しません'
+            context['redirect_url'] = reverse_lazy('name_setting')
+            self.template_name = 'QAS/error.html'
+            return context
+        
+        reviews = ShopReview.objects.filter(user=user_profile.user).order_by("-created_at")
         review_counts = {
             'very_satisfied': reviews.filter(rating=5).count(),
             'satisfied': reviews.filter(rating=4).count(),

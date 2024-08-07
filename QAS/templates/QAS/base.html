@@ -9,7 +9,7 @@
     <div class="sidebar">
         <h2>メニュー</h2>
         <ul>
-            <li><a href="{% url 'kanri' %}">レビュー結果</a></li>
+            <li><a href="{% url 'kanri' store_code=store_code %}">レビュー結果</a></li>
             <li><a href="{% url 'improve_result_list' %}">改善点のアンケート結果</a></li>
             <li class="menu-item has-submenu">
                 <a href="#">設定</a>
@@ -23,6 +23,9 @@
 
             <li><a href="{% url 'logout' %}">ログアウト</a></li>
         </ul>
+        <!-- <div>
+            Store code: {{ store_code }}
+        </div> -->
     </div>
     <div class="main-content">
         {% block content %}
