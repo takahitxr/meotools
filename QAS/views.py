@@ -26,6 +26,7 @@ class KanriView(LoginRequiredMixin, TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         store_code = self.store_code
+
         try:
             user_profile = UserProfile.objects.get(store_code=store_code)
         except UserProfile.DoesNotExist:
