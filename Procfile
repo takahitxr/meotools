@@ -1,1 +1,1 @@
-web: gunicorn MEOTOOLS.wsgi --log-file -
+web: gunicorn google_question.wsgi --log-file -
