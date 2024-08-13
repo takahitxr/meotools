@@ -8,9 +8,6 @@
 </head>
 <body>
     <div class="login-container">
-        <!-- <div class="login-logo">
-            <img src="{% static 'images/chatwork_logo.png' %}" alt="Chatwork Logo">
-        </div> -->
         <h2>ログイン</h2>
         <form method="post" action="{% url 'login' %}">
             {% csrf_token %}
@@ -26,9 +23,6 @@
                 <input type="checkbox" id="remember_me" name="remember_me"><label for="remember_me">ログイン状態を保持する</label>
             </div>
             <button type="submit" class="login-button">ログイン</button>
-            <!-- <div class="form-links">
-                <a href="{% url 'signup' %}">新規登録</a>
-            </div> -->
         </form>
     </div>
 </body>

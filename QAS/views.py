@@ -99,6 +99,10 @@ class ReviewFormView(FormView):
             context['error_message'] = 'レビュー項目が入力されていません。'
             context['redirect_url'] = reverse_lazy('user_settings')
             self.template_name = 'QAS/error.html'
+        except ImproveSetting.DoesNotExist:
+            context['error_message'] = 'レビューがまだ存在しません。'
+            context['redirect_url'] = reverse_lazy('user_settings')
+            self.template_name = 'QAS/error.html'
 
         return context
 
