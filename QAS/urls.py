@@ -13,7 +13,7 @@ urlpatterns = [
     path('login/', LoginView.as_view(template_name='QAS/login.html'), name='login'),
     path('logout/', LogoutView.as_view(next_page='login'), name='logout'),
     path('', KanriView.as_view(template_name='QAS/kanri.html'), name='home'),
-    path('signup/', SignUpView.as_view(), name='signup'),
+    path('user-signup/', SignUpView.as_view(), name='signup'),
     path('settings/', UserSettingsView.as_view(), name='user_settings'),
     path('improve_settings/', ImproveSettingsView.as_view(), name='improve_settings'),
     path('<str:store_code>/improve/', ImproveFormView.as_view(), name='improve_page'),
