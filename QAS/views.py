@@ -78,7 +78,7 @@ class ReviewFormView(FormView):
                 self.template_name = 'QAS/error.html'
                 return context
             if not improve_setting.question_title or not improve_setting.question_text1:
-                context['error_message'] = '改善点ページが設定されていません。'
+                context['error_message'] = 'レビュー後の質問ページが設定されていません。'
                 context['redirect_url'] = reverse_lazy('improve_settings')
                 self.template_name = 'QAS/error.html'
                 return context
@@ -287,11 +287,19 @@ class ImproveResultsView(LoginRequiredMixin, TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        improve_results = ImproveResult.objects.order_by('-created_at')
-        improve_setting = ImproveSetting.objects.get(user=self.request.user)
+        try:
+            improve_results = ImproveResult.objects.order_by('-created_at')
+            improve_setting = ImproveSetting.objects.get(user=self.request.user)
 
-        context['improve_results'] = improve_results
-        context['improve_setting'] = improve_setting
+            context['improve_results'] = improve_results
+            context['improve_setting'] = improve_setting
+        except:
+            context['error_message'] = 'レビュー後の質問ページの質問項目を入力してください。'
+            context['redirect_url'] = reverse_lazy('improve_settings')
+            self.template_name = 'QAS/error.html'
+            return context
+
+
         return context
     
 

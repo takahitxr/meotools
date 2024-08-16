@@ -8,15 +8,15 @@
 
 <h1>質問内容の設定</h1>
 <div class="container">
-    <h2>改善点ページの質問項目</h2>
+    <h2>レビュー後の質問ページの項目設定</h2>
     <form method="post">
         {% csrf_token %}
         <div class="form-group">
-            <label for="question_title">改善点ページのタイトル</label>
+            <label for="question_title">タイトル</label>
             <div class="improve-setting-group">
                 {{ form.question_title }}
             </div>
-            <label>改善点ページで質問したい内容を記入してください。</label>
+            <label>質問したい内容を記入してください。</label>
             <div class="improve-setting-group">
                 <label for="question_text1">質問内容1</label>
                 {{ form.question_text1 }}
@@ -47,7 +47,7 @@
                 {{ form.is_required5 }}
             </div>
         </div>
-        <button type="submit" name="save_improvements" class="button">改善点を保存</button>
+        <button type="submit" name="save_improvements" class="button">保存</button>
     </form>
     {% if messages %}
             <div id="message-container">

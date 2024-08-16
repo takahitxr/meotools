@@ -21,7 +21,7 @@ class UserProfile(models.Model):
         return str(self.user)
 
 class ReviewSetting(models.Model):
-    question_title = models.CharField(max_length=100, default="ご来店ありがとうございました。本日は満足していただけましたでしょうか")
+    question_title = models.CharField(max_length=100, default="ご来店ありがとうございました。本日は満足していただけましたでしょうか？")
     very_satisfied_label = models.CharField(max_length=100, default="非常に満足")
     satisfied_label = models.CharField(max_length=100, default="満足")
     neutral_label = models.CharField(max_length=100, default="普通")

@@ -8,3 +8,16 @@ def store_code_processor(request):
         except UserProfile.DoesNotExist:
             return {'store_code': None}
     return {'store_code': None}
+
+def store_name_processor(request):
+    store_name = "店舗名未設定"
+    
+    if request.user.is_authenticated:
+        try:
+            user_profile = UserProfile.objects.get(user=request.user)
+            if user_profile.store_name:
+                store_name = user_profile.store_name
+        except UserProfile.DoesNotExist:
+            pass
+    
+    return {'store_name': store_name}

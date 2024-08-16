@@ -8,15 +8,16 @@
 <body>
     <div class="sidebar">
         <h2>メニュー</h2>
+        <h3>店舗名 : {{ store_name }}</h3>
         <ul>
             <li><a href="{% url 'kanri' store_code=store_code %}">レビュー結果</a></li>
-            <li><a href="{% url 'improve_result_list' %}">改善点のアンケート結果</a></li>
+            <li><a href="{% url 'improve_result_list' %}">質問ページの回答一覧</a></li>
             <li class="menu-item has-submenu">
                 <a href="#">設定</a>
                 <ul class="submenu">
-                    <li><a href="{% url 'name_setting' %}">店舗名の設定</a></li>
-                    <li><a href="{% url 'user_settings' %}">質問内容の設定</a></li>
-                    <li><a href="{% url 'improve_settings' %}">改善点ページの設定</a></li>
+                    <li><a href="{% url 'name_setting' %}">店舗情報の設定</a></li>
+                    <li><a href="{% url 'user_settings' %}">レビュー設定</a></li>
+                    <li><a href="{% url 'improve_settings' %}">質問ページの設定</a></li>
                 </ul>
             </li>
             <li><a href="{% url 'review_form' store_code=store_code %}">レビュー画面プレビュー</a></li>
