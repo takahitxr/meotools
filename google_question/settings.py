@@ -80,24 +80,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'google_question.wsgi.application'
 
-
-# Database
-# https://docs.djangoproject.com/en/3.2/ref/settings/#databases
-
-# DATABASES = {
-#     'default': {
-#         'ENGINE': config('ENGINE'),
-#         'NAME': config('DBNAME'),
-#         'USER': config('DBUSER'),
-#         'PASSWORD': config('DBPASS'),
-#         'HOST': 'localhost',
-#         'PORT': '3306',
-#         'OPTIONS': {
-#             'charset': 'utf8mb4',
-#         },
-#     }
-# }
-
 DATABASES = {
     'default': dj_database_url.config(
         default=config('DBURL'),
@@ -105,8 +87,6 @@ DATABASES = {
     )
 }
 
-# Password validation
-# https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
 
 AUTH_PASSWORD_VALIDATORS = [
     {
