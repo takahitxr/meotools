@@ -8,7 +8,8 @@ pip install -r requirements.txt
 # Convert static asset files
 python manage.py collectstatic --no-input
 
-# Apply any outstanding database migrations
-python manage.py migrate
+echo "Running migrations..."
+python manage.py migrate --verbosity 3  # マイグレーションの詳細なログを出力
+echo "Migrations completed."
 
 gunicorn google_question.asgi:application -k uvicorn.workers.UvicornWorker
