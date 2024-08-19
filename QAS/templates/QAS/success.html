@@ -16,7 +16,12 @@
             <p>Google上で具体的な内容をお聞かせください。</p>
             <p>数秒後、自動的にGoogleビジネスプロフィールのレビュー画面に遷移します。</p>
         </div>
-        <button class="success-button" onclick="window.location.href='https://www.google.com/search?q=%E3%82%84%E3%81%8D%E3%81%AB%E3%81%8F&oq=%E3%82%84%E3%81%8D%E3%81%AB%E3%81%8F&gs_lcrp=EgZjaHJvbWUyBggAEEUYOTIMCAEQABhDGIAEGIoFMg8IAhAAGEMYsQMYgAQYigUyDwgDEAAYBBixAxjJAxiABDIMCAQQABgEGJIDGIAEMg0IBRAAGJIDGIAEGIoFMgkIBhAAGAQYgAQyDAgHEAAYBBixAxiABDIJCAgQABgEGIAEMgwICRAAGAQYsQMYgATSAQgyNDEyajFqN6gCCLACAQ&sourceid=chrome&ie=UTF-8&lqi=CgbnhLzogolI6aWO_OWAgIAIWhIQABgAIgbnhLzogokqBAgDEACSARN5YWtpbmlrdV9yZXN0YXVyYW50mgEkQ2hkRFNVaE5NRzluUzBWSlEwRm5TVVJhYVV0aFFUbFJSUkFCqgFFCgkvbS8wNnNyNWcQASoKIgbnhLzogokoCDIeEAEiGhLRnQAH_LJqhLFfY8-yx-Gqh7wf7NY5u9abMgoQAiIG54S86IKJugEICgbnhLzogok#lrd=0x35511108cfa63eb3:0xaa20b88ea0bc62df,3,,,,&rlimm=12259001108424057567'">Google投稿フォームへ</button>
+        <button class="success-button" onclick="window.location.href='{{ store_address|safe }}'">Google投稿フォームへ</button>
     </div>
+    <script>
+        setTimeout(function() {
+            window.location.href = '{{ store_address|safe }}';
+        }, 3000);  // 3秒後にフィードバックページにリダイレクト
+    </script>
 </body>
 </html>

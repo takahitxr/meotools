@@ -3,7 +3,7 @@
 {% block title %}店舗名の変更{% endblock %}
 
 {% block content %}
-<h1>店舗名の設定</h1>
+<h1>店舗名の変更</h1>
 <form method="post">
     {% csrf_token %}
     <div class="form-group">
@@ -15,6 +15,7 @@
         {{ form.google_review_url  }}
     </div>
     <button type="submit" class="button">保存</button>
+    <button type="button" class="button" id="link-check-button">リンクチェック</button>
 </form>
     {% if messages %}
     <div id="message-container">
@@ -23,14 +24,29 @@
         {% endfor %}
     </div>
     {% endif %}
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-        var messageContainer = document.getElementById('message-container');
-        if (messageContainer) {
-            setTimeout(function () {
-                messageContainer.style.display = 'none';
-            }, 3000); // 3秒後にメッセージを非表示にする
-        }
-    });
-</script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var messageContainer = document.getElementById('message-container');
+            if (messageContainer) {
+                setTimeout(function () {
+                    messageContainer.style.display = 'none';
+                }, 3000); // 3秒後にメッセージを非表示にする
+            }
+    
+            // リンクチェックボタンのクリックイベントを設定
+            var linkCheckButton = document.getElementById('link-check-button');
+            linkCheckButton.addEventListener('click', function () {
+                var urlField = document.querySelector('input[name="google_review_url"]');
+                var url = urlField.value;
+                
+                // URLが入力されているか確認
+                if (url) {
+                    // 入力されたURLにリダイレクト
+                    window.open(url, '_blank');
+                } else {
+                    alert('URLが入力されていません。');
+                }
+            });
+        });
+    </script>
 {% endblock %}

@@ -12,6 +12,8 @@ SECRET_KEY = config('SECRET_KEY')
 DEBUG = False
 ALLOWED_HOSTS = ['meotools.onrender.com']
 
+
+
 DATABASES = {
     'default': dj_database_url.config(
         default=config('DBURL'),
@@ -64,6 +66,7 @@ TEMPLATES = [
                 'django.contrib.messages.context_processors.messages',
                 'QAS.context_processors.store_code_processor',
                 'QAS.context_processors.store_name_processor', 
+                'QAS.context_processors.store_address_processor', 
             ],
         },
     },
@@ -101,10 +104,6 @@ USE_I18N = True
 USE_L10N = True
 
 USE_TZ = True
-
-
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/3.2/howto/static-files/
 
 STATIC_URL = '/static/'
 

@@ -15,7 +15,7 @@ class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     store_name = models.CharField(max_length=100, blank=True, null=True)
     store_code = models.CharField(max_length=100, blank=True, null=True)
-    google_review_url = models.URLField(blank=True, null=True)
+    google_review_url = models.URLField(max_length=2000, blank=True, null=True)
 
     def __str__(self):
         return str(self.user)

@@ -12,6 +12,7 @@ from django.db import IntegrityError
 from django.contrib.auth import login
 from django.utils import timezone
 from django.contrib import messages
+import urllib.parse
 
 
 class KanriView(LoginRequiredMixin, TemplateView):
@@ -319,3 +320,4 @@ class StoreNameUpdateView(LoginRequiredMixin, UpdateView):
         form.save()  # フォームデータを保存
         messages.success(self.request, '設定が更新されました。')
         return super().form_valid(form)
+
