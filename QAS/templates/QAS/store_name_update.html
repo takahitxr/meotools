@@ -4,49 +4,62 @@
 
 {% block content %}
 <h1>店舗名の変更</h1>
-<form method="post">
+<form method="post" id="store-form">
     {% csrf_token %}
     <div class="form-group">
         <label>店舗名</label>
-        {{ form.store_name  }}
+        {{ form.store_name }}
     </div>
-    <div class="form-group">
+    <div class="form-group" style="display: none;">
         <label>Google店舗レビューURL</label>
-        {{ form.google_review_url  }}
+        {{ form.google_review_url }}
     </div>
-    <button type="submit" class="button">保存</button>
-    <button type="button" class="button" id="link-check-button">リンクチェック</button>
+    <button type="submit" class="button" id="link-check-button">保存</button>
 </form>
-    {% if messages %}
-    <div id="message-container">
-        {% for message in messages %}
-            <div class="message {{ message.tags }}">{{ message }}</div>
-        {% endfor %}
-    </div>
-    {% endif %}
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            var messageContainer = document.getElementById('message-container');
-            if (messageContainer) {
-                setTimeout(function () {
-                    messageContainer.style.display = 'none';
-                }, 3000); // 3秒後にメッセージを非表示にする
-            }
-    
-            // リンクチェックボタンのクリックイベントを設定
-            var linkCheckButton = document.getElementById('link-check-button');
-            linkCheckButton.addEventListener('click', function () {
-                var urlField = document.querySelector('input[name="google_review_url"]');
-                var url = urlField.value;
-                
-                // URLが入力されているか確認
-                if (url) {
-                    // 入力されたURLにリダイレクト
-                    window.open(url, '_blank');
+
+{% if messages %}
+<div id="message-container">
+    {% for message in messages %}
+        <div class="message {{ message.tags }}">{{ message }}</div>
+    {% endfor %}
+</div>
+{% endif %}
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var messageContainer = document.getElementById('message-container');
+        if (messageContainer) {
+            setTimeout(function () {
+                messageContainer.style.display = 'none';
+            }, 3000); // 3秒後にメッセージを非表示にする
+        }
+
+        var linkCheckButton = document.getElementById('link-check-button');
+        linkCheckButton.addEventListener('click', function () {
+        var storeNameField = document.querySelector('input[name="store_name"]');
+        var storeName = storeNameField.value;
+
+        if (!storeName) {
+            alert('店舗名が入力されていません。');
+            return;
+        }
+
+        // サーバーにリクエストを送信
+        fetch(`/get_place_id?store_name=${encodeURIComponent(storeName)}`)
+            .then(response => response.json())
+            .then(data => {
+                if (data.place_id) {
+                    var urlField = document.querySelector('input[name="google_review_url"]');
+                    urlField.value = `https://search.google.com/local/writereview?placeid=${data.place_id}`;
+                    document.getElementById('store-form').submit();
                 } else {
-                    alert('URLが入力されていません。');
+                    alert('場所が見つかりませんでした。');
                 }
+            })
+            .catch(error => {
+                console.error('エラーが発生しました:', error);
+                alert('エラーが発生しました。');
             });
-        });
-    </script>
+    });
+});
+</script>
 {% endblock %}

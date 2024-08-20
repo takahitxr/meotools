@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.urls import path
-from QAS.views import ReviewFormView, KanriView, SuccessView, UserSettingsView, SignUpView, FeedbackView, ImproveSettingsView, ImproveFormView,ImproveResultsView, StoreNameUpdateView
+from QAS.views import ReviewFormView, KanriView, SuccessView, UserSettingsView, SignUpView, FeedbackView, ImproveSettingsView, ImproveFormView,ImproveResultsView, StoreNameUpdateView, get_place_id
 from django.contrib.auth.views import LoginView, LogoutView
 from django.views.generic import TemplateView
 
@@ -19,4 +19,5 @@ urlpatterns = [
     path('<str:store_code>/improve/', ImproveFormView.as_view(), name='improve_page'),
     path('improve_results/', ImproveResultsView.as_view(), name='improve_result_list'),
     path('name_setting/', StoreNameUpdateView.as_view(), name='name_setting'),
+    path('get_place_id/', get_place_id, name='get_place_id'),
 ]

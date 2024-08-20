@@ -14,6 +14,8 @@ from django.utils import timezone
 from django.contrib import messages
 import urllib.parse
 from django.urls import reverse
+import requests
+from django.http import JsonResponse
 
 class KanriView(LoginRequiredMixin, TemplateView):
     template_name = 'QAS/kanri.html'
@@ -151,6 +153,7 @@ class ReviewFormView(FormView):
             improve_url = f'/{store_code}/improve/'
             return redirect(improve_url)
 
+
     def render_error_page(self, message):
         return render(self.request, 'QAS/error.html', {'message': message})
 
@@ -176,7 +179,7 @@ class UserSettingsView(LoginRequiredMixin, UpdateView):
     model = ReviewSetting
     form_class = UserSettingsForm
     template_name = 'QAS/user_settings.html'
-    success_url = '/settings/'  # 成功した場合のリダイレクトURL
+    success_url = '/settings/'
     login_url = 'login'
 
     def get_object(self, queryset=None):
@@ -190,7 +193,7 @@ class UserSettingsView(LoginRequiredMixin, UpdateView):
 class ImproveSettingsView(LoginRequiredMixin, UpdateView):
     form_class = ImproveSettingsForm
     template_name = 'QAS/improve_settings.html'
-    success_url = '/improve_settings/'  # 成功した場合のリダイレクトURL
+    success_url = '/improve_settings/'
     login_url = 'login'
 
     def get_object(self, queryset=None):
@@ -339,3 +342,16 @@ class StoreNameUpdateView(LoginRequiredMixin, UpdateView):
         messages.success(self.request, '設定が更新されました。')
         return super().form_valid(form)
 
+
+def get_place_id(request):
+    store_name = request.GET.get('store_name')
+    api_key = 'AIzaSyCTGBvebknFJ5LOtbNSYGm7Gr0nTrCxQDI'
+    
+    url = f"https://maps.googleapis.com/maps/api/place/findplacefromtext/json?input={store_name}&inputtype=textquery&fields=place_id&key={api_key}"
+    
+    response = requests.get(url)
+    data = response.json()
+    if data['status'] == 'OK':
+        return JsonResponse({'place_id': data['candidates'][0]['place_id']})
+    else:
+        return JsonResponse({'error': 'Place not found'}, status=400)
