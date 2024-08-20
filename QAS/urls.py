@@ -1,15 +1,15 @@
 from django.contrib import admin
 from django.urls import path
-from QAS.views import ReviewFormView, KanriView, CustomLoginView, UserSettingsView, SignUpView, FeedbackView, ImproveSettingsView, ImproveFormView,ImproveResultsView, StoreNameUpdateView
+from QAS.views import ReviewFormView, KanriView, SuccessView, UserSettingsView, SignUpView, FeedbackView, ImproveSettingsView, ImproveFormView,ImproveResultsView, StoreNameUpdateView
 from django.contrib.auth.views import LoginView, LogoutView
 from django.views.generic import TemplateView
 
 urlpatterns = [
     path('<str:store_code>/review/', ReviewFormView.as_view(), name='review_form'),
-    path('success/', TemplateView.as_view(template_name='QAS/success.html'), name='success'),
+    path('<str:store_code>/success/', SuccessView.as_view(), name='success'),
     path('fail/', TemplateView.as_view(template_name='QAS/fail.html'), name='fail'),
     path('feedback/', FeedbackView.as_view(template_name='QAS/feedback.html'), name='feedback'),
-    path('<str:store_code>/kanri//', KanriView.as_view(), name='kanri'),
+    path('<str:store_code>/kanri/', KanriView.as_view(), name='kanri'),
     path('login/', LoginView.as_view(template_name='QAS/login.html'), name='login'),
     path('logout/', LogoutView.as_view(next_page='login'), name='logout'),
     path('', KanriView.as_view(template_name='QAS/kanri.html'), name='home'),

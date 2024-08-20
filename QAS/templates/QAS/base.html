@@ -7,7 +7,9 @@
 </head>
 <body>
     <div class="sidebar">
-        <h2>メニュー</h2>
+
+        
+        <h2><a href="{% url 'kanri' store_code=store_code %}">メニュー</a></h2>
         <h3>店舗名 : {{ store_name }}</h3>
         <ul>
             <li><a href="{% url 'kanri' store_code=store_code %}">レビュー結果</a></li>

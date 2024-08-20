@@ -13,7 +13,7 @@ from django.contrib.auth import login
 from django.utils import timezone
 from django.contrib import messages
 import urllib.parse
-
+from django.urls import reverse
 
 class KanriView(LoginRequiredMixin, TemplateView):
     template_name = 'QAS/kanri.html'
@@ -51,8 +51,6 @@ class KanriView(LoginRequiredMixin, TemplateView):
 class ReviewFormView(FormView):
     template_name = 'QAS/review.html'
     form_class = ReviewForm
-    success_url = reverse_lazy('success')
-    fail_url = reverse_lazy('fail')
 
     def dispatch(self, request, *args, **kwargs):
         self.store_code = kwargs.get('store_code')
@@ -78,6 +76,7 @@ class ReviewFormView(FormView):
                 context['redirect_url'] = reverse_lazy('name_setting')
                 self.template_name = 'QAS/error.html'
                 return context
+            
             if not improve_setting.question_title or not improve_setting.question_text1:
                 context['error_message'] = 'レビュー後の質問ページが設定されていません。'
                 context['redirect_url'] = reverse_lazy('improve_settings')
@@ -91,6 +90,7 @@ class ReviewFormView(FormView):
             context['dissatisfied_label'] = review_setting.dissatisfied_label
             context['very_dissatisfied_label'] = review_setting.very_dissatisfied_label
             context['store_code'] = store_code
+            context['store_name'] = user_profile.store_name
 
         except UserProfile.DoesNotExist:
             context['error_message'] = '店舗名、店舗レビューURLが入力されていません。'
@@ -135,23 +135,41 @@ class ReviewFormView(FormView):
             rating=rating,
             review_text=reviewtext,
         )
+        success_url = reverse('success', args=[store_code])
 
         if satisfaction == 'very_satisfied' and review_setting.very_satisfied_redirect_url == "google_review":
-            return redirect(self.success_url)
+            return redirect(success_url)
         elif satisfaction == 'satisfied' and review_setting.satisfied_redirect_url == "google_review":
-            return redirect(self.success_url)
+            return redirect(success_url)
         elif satisfaction == 'neutral' and review_setting.neutral_redirect_url == "google_review":
-            return redirect(self.success_url)
+            return redirect(success_url)
         elif satisfaction == 'dissatisfied' and review_setting.dissatisfied_redirect_url == "google_review":
-            return redirect(self.success_url)
+            return redirect(success_url)
         elif satisfaction == 'very_dissatisfied' and review_setting.very_dissatisfied_redirect_url == "google_review":
-            return redirect(self.success_url)
+            return redirect(success_url)
         else:
             improve_url = f'/{store_code}/improve/'
             return redirect(improve_url)
 
     def render_error_page(self, message):
         return render(self.request, 'QAS/error.html', {'message': message})
+
+
+class SuccessView(TemplateView):
+    template_name = 'QAS/success.html'
+    
+    def dispatch(self, request, *args, **kwargs):
+        self.store_code = kwargs.get('store_code')
+        return super().dispatch(request, *args, **kwargs)
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        store_code = self.store_code
+        user_profile = UserProfile.objects.get(store_code=store_code)
+        context['store_address'] = user_profile.google_review_url
+        return context
+
+
 
 
 class UserSettingsView(LoginRequiredMixin, UpdateView):
@@ -194,7 +212,7 @@ class FeedbackView(FormView):
     template_name = 'QAS/feedback.html'
     form_class = FeedBackForm
     model = ShopReview
-    success_url = '/success/'
+    
 
     def form_valid(self, form):
         review = form.save(commit=False)
@@ -235,7 +253,6 @@ class CustomLoginView(LoginView):
 
 class ImproveFormView(FormView):
     template_name = 'QAS/improvepage.html'
-    success_url = '/success/'
     form_class = ImproveForm
     
     def dispatch(self, request, *args, **kwargs):
@@ -279,7 +296,8 @@ class ImproveFormView(FormView):
             created_at=timezone.now()
         )
 
-        return redirect(self.success_url)
+        success_url = reverse('success', args=[store_code])
+        return redirect(success_url)
     
 
 
