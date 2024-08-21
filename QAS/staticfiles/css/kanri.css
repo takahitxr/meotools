@@ -8,7 +8,7 @@ body {
 
 .sidebar {
     width: 250px;
-    background-color: #357ebd;
+    background-color: #2b6aa0;
     color: white;
     padding: 20px;
     box-sizing: border-box;
@@ -90,7 +90,7 @@ body {
 .button {
     display: inline-block;
     padding: 10px 20px;
-    background-color: #357ebd;
+    background-color: #2b6aa0;
     color: white;
     text-align: center;
     text-decoration: none;
@@ -175,7 +175,7 @@ body {
 }
 
 .review-table th {
-    background-color: #357ebd;
+    background-color: #2b6aa0;
     color: white;
 }
 
@@ -203,7 +203,7 @@ body {
 }
 
 .latest-reviews-table th {
-    background-color: #357ebd;
+    background-color: #2b6aa0;
     color: white;
 }
 
@@ -221,27 +221,42 @@ body {
     position: relative;
 }
 
-.menu-item a {
+.menu-item a, .sidebar ul li a {
     display: block;
-    padding: 10px;
+    padding: 10px 0;
     text-decoration: none;
-    color: #333;
+    color: white;
+    font-weight: 500;
+    transition: background-color 0.3s;
+}
+
+.menu-item a .material-icons, .sidebar ul li a .material-icons, h2 .material-icons, h3 .material-icons {
+    margin-right: 10px; 
+}
+
+.menu-item a:hover, .sidebar ul li a:hover {
+    background-color: #255982; /* ホバー時の背景色 */
+}
+
+.menu-item.active a {
+    background-color: #4a7ebd;
 }
 
 .has-submenu > a::after {
     content: '▼';
     float: right;
+    margin-right: 10px;
 }
 
 .submenu {
     display: none;
-    position: absolute;
-    top: 0;
-    left: 100%;
-    width: 200px;
-    background-color: #357ebd;
-    border: 1px solid #ddd;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    list-style-type: none;
+    padding-left: 20px;
+    margin-top: 10px;
+}
+
+.menu-item.has-submenu ul {
+    padding-left: 20px;
 }
 
 .menu-item:hover .submenu {
@@ -249,8 +264,16 @@ body {
 }
 
 .submenu a {
-    padding: 10px;
-    white-space: nowrap;
+    padding: 10px 15px;
+    background-color: #2b6aa0; /* サブメニューの背景色 */
+    border-left: 4px solid #4a7ebd; /* アクティブな項目に合わせたボーダーカラー */
+    margin-bottom: 5px;
+    text-decoration: none;
+    color: white;
+}
+
+.submenu a:hover {
+    background-color: #255982;
 }
 
 .improve-setting-group {
@@ -324,4 +347,8 @@ h2 a {
     display: block;
     word-wrap: break-word; 
     white-space: normal;
+    margin: 0;
 }
+
+
+

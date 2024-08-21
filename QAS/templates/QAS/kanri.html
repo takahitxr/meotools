@@ -7,6 +7,20 @@
 {% load static %}
 
 <h1>ダッシュボード</h1>
+
+<form method="get" class="month-selection-form" id="monthForm">
+    <label for="month">月を選択:</label>
+    <div class="form-group">
+        <select name="month" id="month" class="form-control" onchange="document.getElementById('monthForm').submit();">
+            {% for month in months %}
+                <option value="{{ month.month|date:"Y-m" }}" {% if request.GET.month == month.month|date:"Y-m" %}selected{% endif %}>
+                    {{ month.month|date:"Y年m月" }}
+                </option>
+            {% endfor %}
+        </select>
+    </div>
+</form>
+
 <div class="dashboard-container">
     <div class="stats-container">
         <div class="chart-section">

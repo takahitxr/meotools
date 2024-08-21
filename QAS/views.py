@@ -2,25 +2,25 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.views import LoginView
 from django.urls import reverse_lazy
 from django.views.generic import TemplateView, ListView
-from django.views.generic.edit import FormView
-from django.views.generic.edit import UpdateView
+from django.views.generic.edit import FormView,UpdateView
 from django.shortcuts import render, redirect
 from .forms import UserSettingsForm, SignUpForm, ReviewForm, FeedBackForm, ImproveSettingsForm, ImproveForm, StoreNameForm
 from .models import SatisfactionChoice, User, ReviewSetting, ShopReview, ImproveSetting, ImproveResult, UserProfile
-from django.http import HttpResponseRedirect
-from django.db import IntegrityError
 from django.contrib.auth import login
 from django.utils import timezone
 from django.contrib import messages
-import urllib.parse
 from django.urls import reverse
 import requests
 from django.http import JsonResponse
+from datetime import datetime
+from django.db.models.functions import TruncMonth
+from django.db.models import Count
+from django.utils.dateparse import parse_date
 
 class KanriView(LoginRequiredMixin, TemplateView):
     template_name = 'QAS/kanri.html'
     login_url = 'login'
-    model = ShopReview
+    
 
     def dispatch(self, request, *args, **kwargs):
         self.store_code = kwargs.get('store_code')
@@ -31,22 +31,43 @@ class KanriView(LoginRequiredMixin, TemplateView):
         store_code = self.store_code
         try:
             user_profile = UserProfile.objects.get(store_code=store_code)
+            months = ShopReview.objects.filter(user=user_profile.user)\
+                .annotate(month=TruncMonth('created_at'))\
+                .values('month')\
+                .distinct()\
+                .order_by('-month')
+            
+            context['months'] = months
+
+            selected_month = self.request.GET.get('month')
+            if selected_month:
+                # 文字列の月をdatetimeに変換
+                start_date = parse_date(f"{selected_month}-01")
+                end_date = datetime(start_date.year, start_date.month + 1, 1)
+                
+                reviews = ShopReview.objects.filter(user=user_profile.user, created_at__gte=start_date, created_at__lt=end_date).order_by("-created_at")
+            else:
+                # 月が選択されていない場合は全てのレビューを表示
+                reviews = ShopReview.objects.filter(user=user_profile.user).order_by("-created_at")
+
+            review_counts = {
+                'very_satisfied': reviews.filter(rating=5).count(),
+                'satisfied': reviews.filter(rating=4).count(),
+                'neutral': reviews.filter(rating=3).count(),
+                'dissatisfied': reviews.filter(rating=2).count(),
+                'very_dissatisfied': reviews.filter(rating=1).count(),
+            }
+            context['review_counts'] = review_counts
+            context['latest_reviews'] = reviews
+
+
         except UserProfile.DoesNotExist:
             context['error_message'] = 'ストアコードが存在しません'
             context['redirect_url'] = reverse_lazy('name_setting')
             self.template_name = 'QAS/error.html'
+            print("エラー厨")
             return context
         
-        reviews = ShopReview.objects.filter(user=user_profile.user).order_by("-created_at")
-        review_counts = {
-            'very_satisfied': reviews.filter(rating=5).count(),
-            'satisfied': reviews.filter(rating=4).count(),
-            'neutral': reviews.filter(rating=3).count(),
-            'dissatisfied': reviews.filter(rating=2).count(),
-            'very_dissatisfied': reviews.filter(rating=1).count(),
-        }
-        context['review_counts'] = review_counts
-        context['latest_reviews'] = reviews
         return context
     
     
