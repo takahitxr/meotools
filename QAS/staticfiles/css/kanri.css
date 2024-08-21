@@ -1,6 +1,6 @@
 body {
     margin: 0;
-    font-family: Arial, sans-serif;
+    font-family: 'Noto Sans JP', sans-serif;
     display: flex;
     height: 130vh;
 
@@ -314,4 +314,14 @@ body {
 h2 a {
     color: inherit;
     text-decoration: none;
+}
+
+.store-name {
+    display: block;
+}
+
+.store-name-value {
+    display: block;
+    word-wrap: break-word; 
+    white-space: normal;
 }

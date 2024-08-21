@@ -118,8 +118,9 @@ class ImproveForm(forms.Form):
 class StoreNameForm(forms.ModelForm):
     class Meta:
         model = UserProfile
-        fields = ['store_name', 'google_review_url']
+        fields = ['store_name','store_address' , 'google_review_url']
         widgets = {
             'store_name': forms.TextInput(attrs={'class': 'form-control inline', 'placeholder': '店舗名'}),
+            'store_address': forms.TextInput(attrs={'class': 'form-control inline', 'placeholder': '住所'}),
             'google_review_url' : forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'レビューURL'})
         }

@@ -2,6 +2,7 @@
 <head>
     {% load static %}
     <link rel="stylesheet" href="{% static 'css/kanri.css' %}"/>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet">
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
     <title>{% block title %}QAS{% endblock %}</title>
 </head>
@@ -10,7 +11,8 @@
 
         
         <h2><a href="{% url 'kanri' store_code=store_code %}">メニュー</a></h2>
-        <h3>店舗名 : {{ store_name }}</h3>
+        <h3>店舗名</h3>
+        <h3><span class="store-name-value"> {{ store_name }}</span></h3>
         <ul>
             <li><a href="{% url 'kanri' store_code=store_code %}">レビュー結果</a></li>
             <li><a href="{% url 'improve_result_list' %}">質問ページの回答一覧</a></li>

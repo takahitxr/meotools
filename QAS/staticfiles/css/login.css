@@ -1,6 +1,6 @@
 /* QAS/static/css/login.css */
 body {
-    font-family: Arial, sans-serif;
+    font-family: 'Noto Sans JP', sans-serif;
     background-color: #f5f5f5; /* 他のページの背景色に合わせる */
     display: flex;
     justify-content: center;
