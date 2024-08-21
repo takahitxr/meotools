@@ -10,11 +10,16 @@
         <label>店舗名</label>
         {{ form.store_name }}
     </div>
+    <div class="form-group">
+        <label>住所</label>
+        {{ form.store_address }}
+    </div>
     <div class="form-group" style="display: none;">
         <label>Google店舗レビューURL</label>
         {{ form.google_review_url }}
     </div>
     <button type="submit" class="button" id="link-check-button">保存</button>
+    <button type="button" class="button" id="url-check-button">URLチェック</button>
 </form>
 
 {% if messages %}
@@ -37,14 +42,21 @@
         linkCheckButton.addEventListener('click', function () {
         var storeNameField = document.querySelector('input[name="store_name"]');
         var storeName = storeNameField.value;
+        var storeAddressField = document.querySelector('input[name="store_address"]');
+        var storeaddress = storeAddressField.value;
 
         if (!storeName) {
             alert('店舗名が入力されていません。');
             return;
         }
 
+        if (!storeaddress) {
+            alert('住所が入力されていません。');
+            return;
+        }
+
         // サーバーにリクエストを送信
-        fetch(`/get_place_id?store_name=${encodeURIComponent(storeName)}`)
+        fetch(`/get_place_id?store_name=${encodeURIComponent(storeName)}&store_address=${encodeURIComponent(storeaddress)}`)
             .then(response => response.json())
             .then(data => {
                 if (data.place_id) {
@@ -56,10 +68,23 @@
                 }
             })
             .catch(error => {
-                console.error('エラーが発生しました:', error);
-                alert('エラーが発生しました。');
+                console.error('エラーが発生しました。', error);
+                alert('Googleマイビジネスに登録している店舗名、住所を入力してください。');
             });
     });
+    var urlCheckButton = document.getElementById('url-check-button');
+    if (urlCheckButton) {
+        urlCheckButton.addEventListener('click', function () {
+            var urlField = document.querySelector('input[name="google_review_url"]');
+            var googleReviewUrl = urlField.value;
+
+            if (googleReviewUrl) {
+                window.open(googleReviewUrl, '_blank'); 
+            } else {
+                alert('まずはURLを生成してください。');
+            }
+        });
+    }
 });
 </script>
 {% endblock %}

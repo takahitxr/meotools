@@ -345,9 +345,11 @@ class StoreNameUpdateView(LoginRequiredMixin, UpdateView):
 
 def get_place_id(request):
     store_name = request.GET.get('store_name')
+    address = request.GET.get('store_address')
     api_key = 'AIzaSyCTGBvebknFJ5LOtbNSYGm7Gr0nTrCxQDI'
-    
-    url = f"https://maps.googleapis.com/maps/api/place/findplacefromtext/json?input={store_name}&inputtype=textquery&fields=place_id&key={api_key}"
+    search_query = f'{store_name} {address}'
+
+    url = f"https://maps.googleapis.com/maps/api/place/findplacefromtext/json?input={search_query}&inputtype=textquery&fields=place_id&key={api_key}"
     
     response = requests.get(url)
     data = response.json()
