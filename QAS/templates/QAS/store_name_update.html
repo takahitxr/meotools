@@ -7,11 +7,17 @@
 <form method="post" id="store-form">
     {% csrf_token %}
     <div class="form-group">
-        <label>店舗名</label>
+        <div class="input-container">
+            <label>店舗名</label>
+            <span class="small-text">  ＊Googleに登録されている店舗名を、全てコピーしてこちらに貼り付けてください。</span>            
+        </div>
         {{ form.store_name }}
     </div>
     <div class="form-group">
-        <label>住所</label>
+        <div class="input-container">
+            <label>住所</label>
+            <span class="small-text">  ＊Googleに登録されている所在地の住所を、郵便番号から全てコピーしてこちらに貼り付けてください。</span>            
+        </div>
         {{ form.store_address }}
     </div>
     <div class="form-group" style="display: none;">

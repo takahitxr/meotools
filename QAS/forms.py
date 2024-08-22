@@ -72,16 +72,16 @@ class ImproveSettingsForm(forms.ModelForm):
             'is_required5',
         ]
         widgets = {
-            'question_title': forms.TextInput(attrs={'class': 'form-control inline', 'placeholder': '感想を教えてください。'}),
-            'question_text1': forms.TextInput(attrs={'class': 'form-control inline', 'placeholder': '料理はいかがでしたか？'}),
+            'question_title': forms.TextInput(attrs={'class': 'form-control inline', 'placeholder': '(例) 感想を教えてください。'}),
+            'question_text1': forms.TextInput(attrs={'class': 'form-control inline', 'placeholder': '(例) 料理はいかがでしたか？'}),
             'is_required1': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
-            'question_text2': forms.TextInput(attrs={'class': 'form-control inline', 'placeholder': '接客態度はいかがでしたか？'}),
+            'question_text2': forms.TextInput(attrs={'class': 'form-control inline', 'placeholder': '(例) 接客態度はいかがでしたか？'}),
             'is_required2': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
-            'question_text3': forms.TextInput(attrs={'class': 'form-control inline', 'placeholder': '改善したほうがいいと思う点を教えてください。'}),
+            'question_text3': forms.TextInput(attrs={'class': 'form-control inline', 'placeholder': '(例) 改善したほうがいいと思う点を教えてください。'}),
             'is_required3': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
-            'question_text4': forms.TextInput(attrs={'class': 'form-control inline', 'placeholder': '改善したほうがいいと思う点を教えてください。'}),
+            'question_text4': forms.TextInput(attrs={'class': 'form-control inline', 'placeholder': '(例) 改善したほうがいいと思う点を教えてください。'}),
             'is_required4': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
-            'question_text5': forms.TextInput(attrs={'class': 'form-control inline', 'placeholder': '改善したほうがいいと思う点を教えてください。'}),
+            'question_text5': forms.TextInput(attrs={'class': 'form-control inline', 'placeholder': '(例) 改善したほうがいいと思う点を教えてください。'}),
             'is_required5': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
         }
 

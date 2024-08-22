@@ -148,6 +148,15 @@ body {
     gap: 20px;
 }
 
+.input-container {
+display: flex;
+align-items: center;
+}
+
+.input-container input {
+margin-right: 10px;
+}
+
 .chart-section, .review-table-section {
     background-color: #fff;
     padding: 20px;
@@ -351,4 +360,8 @@ h2 a {
 }
 
 
-
+.small-text {
+    font-size: 0.9em; 
+    color: #666; 
+    margin-left: 10px
+}

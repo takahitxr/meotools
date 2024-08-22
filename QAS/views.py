@@ -331,8 +331,23 @@ class ImproveResultsView(LoginRequiredMixin, TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         try:
-            improve_results = ImproveResult.objects.order_by('-created_at')
             improve_setting = ImproveSetting.objects.get(user=self.request.user)
+            months = ImproveResult.objects.filter(user=self.request.user)\
+                .annotate(month=TruncMonth('created_at'))\
+                .values('month')\
+                .distinct()\
+                .order_by('-month')
+            
+            context['months'] = months
+
+            selected_month = self.request.GET.get('month')
+
+            if selected_month:
+                start_date = parse_date(f"{selected_month}-01")
+                end_date = datetime(start_date.year, start_date.month + 1, 1)
+                improve_results = ImproveResult.objects.filter(user=self.request.user, created_at__gte=start_date, created_at__lt=end_date).order_by("-created_at")
+            else:
+                improve_results = ImproveResult.objects.filter(user=self.request.user).order_by("-created_at")
 
             context['improve_results'] = improve_results
             context['improve_setting'] = improve_setting
@@ -369,7 +384,6 @@ def get_place_id(request):
     address = request.GET.get('store_address')
     api_key = 'AIzaSyCTGBvebknFJ5LOtbNSYGm7Gr0nTrCxQDI'
     search_query = f'{store_name} {address}'
-
     url = f"https://maps.googleapis.com/maps/api/place/findplacefromtext/json?input={search_query}&inputtype=textquery&fields=place_id&key={api_key}"
     
     response = requests.get(url)
@@ -378,3 +392,4 @@ def get_place_id(request):
         return JsonResponse({'place_id': data['candidates'][0]['place_id']})
     else:
         return JsonResponse({'error': 'Place not found'}, status=400)
+    
