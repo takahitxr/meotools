@@ -166,12 +166,6 @@ margin-right: 10px;
     flex: 1;
 }
 
-.chart-container {
-    position: relative;
-    width: 100%;
-    height: 300px;
-}
-
 .review-table {
     width: 100%;
     border-collapse: collapse;
@@ -274,8 +268,8 @@ margin-right: 10px;
 
 .submenu a {
     padding: 10px 15px;
-    background-color: #2b6aa0; /* サブメニューの背景色 */
-    border-left: 4px solid #4a7ebd; /* アクティブな項目に合わせたボーダーカラー */
+    background-color: #2b6aa0;
+    border-left: 4px solid #4a7ebd;
     margin-bottom: 5px;
     text-decoration: none;
     color: white;
@@ -364,4 +358,101 @@ h2 a {
     font-size: 0.9em; 
     color: #666; 
     margin-left: 10px
+}
+
+.custom-textbox {
+    width: 100%;
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+    transition: border-color 0.3s ease;
+}
+
+.custom-textbox:focus {
+    border-color: #66afe9;
+    outline: none;
+}
+
+.custom-switch {
+    appearance: none;
+    width: 50px;
+    height: 24px;
+    background-color: #ccc;
+    border-radius: 24px;
+    position: relative;
+    outline: none;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.custom-switch::before {
+    content: "";
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    width: 20px;
+    height: 20px;
+    background-color: white;
+    border-radius: 50%;
+    transition: transform 0.3s ease;
+}
+
+.custom-switch:checked {
+    background-color: #66afe9;
+}
+
+.custom-switch:checked::before {
+    transform: translateX(26px);
+}
+
+
+.chart-label-section {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.chart-container {
+    flex: 1;
+}
+
+.label-container {
+    flex: 1;
+    padding-left: 20px;
+}
+.label-list {
+    list-style-type: none;
+    padding: 0;
+}
+
+.label-list li {
+    margin-bottom: 10px;
+    font-size: 18px;
+}
+
+.label-color-box {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+}
+
+.additional-survey-container {
+    text-align: right;
+}
+
+.btn-link {
+    display: inline-block;
+    padding: 10px 20px;
+    font-size: 16px;
+    background-color: #6c757d;
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.btn-link:hover {
+    background-color: #5a6268;
+    text-decoration: none; /* ホバー時もテキストの装飾をなしに */
 }

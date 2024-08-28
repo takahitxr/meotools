@@ -1,5 +1,5 @@
 from django import forms
-from .models import UserProfile, ReviewSetting, ShopReview, ImproveSetting
+from .models import UserProfile, ReviewSetting, ShopReview, ImproveSetting, AutoResponse
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 
@@ -50,8 +50,12 @@ class UserSettingsForm(forms.ModelForm):
             'very_dissatisfied_redirect_url'
         ]
         widgets = {
-        'question_title': forms.TextInput(attrs={'class': 'form-control inline', 'placeholder': '店舗名'}),
-        'very_satisfied_label' : forms.TextInput(attrs={'class': 'form-control inline', 'placeholder': 'レビューURL'})
+        'question_title': forms.TextInput(attrs={'class': 'form-control inline', 'placeholder': '(例) ご来店ありがとうございました。本日は満足していただけましたでしょうか？'}),
+        'very_satisfied_label' : forms.TextInput(attrs={'class': 'form-control inline', 'placeholder': '(例) 非常に満足'}),
+        'satisfied_label' : forms.TextInput(attrs={'class': 'form-control inline', 'placeholder': '(例) 満足'}),
+        'neutral_label' : forms.TextInput(attrs={'class': 'form-control inline', 'placeholder': '(例) 普通'}),
+        'dissatisfied_label' : forms.TextInput(attrs={'class': 'form-control inline', 'placeholder': '(例) 不満'}),
+        'very_dissatisfied_label' : forms.TextInput(attrs={'class': 'form-control inline', 'placeholder': '(例) 非常に不満'}),
     }
 
 
@@ -124,3 +128,46 @@ class StoreNameForm(forms.ModelForm):
             'store_address': forms.TextInput(attrs={'class': 'form-control inline', 'placeholder': '住所'}),
             'google_review_url' : forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'レビューURL'})
         }
+
+
+class ResponseSettingsForm(forms.ModelForm):
+    class Meta:
+        model = AutoResponse
+        fields = [
+            'response_text1',
+            'is_auto1',
+            'response_text2',
+            'is_auto2',
+            'response_text3',
+            'is_auto3',
+            'response_text4',
+            'is_auto4',
+            'response_text5',
+            'is_auto5',
+        ]
+        widgets = {
+            'response_text1': forms.TextInput(attrs={'class': 'custom-textbox inline'}),
+            'is_auto1': forms.CheckboxInput(attrs={'class': 'custom-switch'}),
+            'response_text2': forms.TextInput(attrs={'class': 'custom-textbox inline'}),
+            'is_auto2': forms.CheckboxInput(attrs={'class': 'custom-switch'}),
+            'response_text3': forms.TextInput(attrs={'class': 'custom-textbox inline'}),
+            'is_auto3': forms.CheckboxInput(attrs={'class': 'custom-switch'}),
+            'response_text4': forms.TextInput(attrs={'class': 'custom-textbox inline'}),
+            'is_auto4': forms.CheckboxInput(attrs={'class': 'custom-switch'}),
+            'response_text5': forms.TextInput(attrs={'class': 'custom-textbox inline'}),
+            'is_auto5': forms.CheckboxInput(attrs={'class': 'custom-switch'}),
+        }
+
+    def clean(self):
+        cleaned_data = super().clean()
+        required_fields = [
+            ('response_text1', 'is_auto1'),
+            ('response_text2', 'is_auto2'),
+            ('response_text3', 'is_auto3'),
+            ('response_text4', 'is_auto4'),
+            ('response_text5', 'is_auto5'),
+        ]
+
+        for question_field, required_field in required_fields:
+            if cleaned_data.get(required_field) and not cleaned_data.get(question_field):
+                self.add_error(question_field, f"{self.fields[question_field].label}は必須です。")

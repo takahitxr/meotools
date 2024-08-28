@@ -77,3 +77,30 @@ class ImproveResult(models.Model):
     def __str__(self):
         return str(self.user)
     
+class AutoResponse(models.Model):
+    class FilterChoices(models.TextChoices):
+        OPTION_1 = 'option1', 'Option 1'
+        OPTION_2 = 'option2', 'Option 2'
+        OPTION_3 = 'option3', 'Option 3'
+        OPTION_4 = 'option4', 'Option 4'
+    response_text1 = models.TextField(max_length=1000, blank=True)
+    response_text2 = models.TextField(max_length=1000, blank=True)
+    response_text3 = models.TextField(max_length=1000, blank=True)
+    response_text4 = models.TextField(max_length=1000, blank=True)
+    response_text5 = models.TextField(max_length=1000, blank=True)
+    filter_text1 = models.CharField(max_length=50, choices=FilterChoices.choices, blank=True)
+    filter_text2 = models.CharField(max_length=50, choices=FilterChoices.choices, blank=True)
+    filter_text3 = models.CharField(max_length=50, choices=FilterChoices.choices, blank=True)
+    filter_text4 = models.CharField(max_length=50, choices=FilterChoices.choices, blank=True)
+    filter_text5 = models.CharField(max_length=50, choices=FilterChoices.choices, blank=True)
+    is_allswitch = models.BooleanField(default=False, blank=True)
+    is_auto1 = models.BooleanField(default=False, blank=True)
+    is_auto2 = models.BooleanField(default=False, blank=True)
+    is_auto3 = models.BooleanField(default=False, blank=True)
+    is_auto4 = models.BooleanField(default=False, blank=True)
+    is_auto5 = models.BooleanField(default=False, blank=True)
+    user = models.ForeignKey(get_user_model(), on_delete=models.CASCADE)
+
+    def __str__(self):
+        return str(self.user)
+    

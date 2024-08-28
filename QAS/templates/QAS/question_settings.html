@@ -11,48 +11,53 @@
     <form method="post">
         {% csrf_token %}
         <div class="form-group">
-            <label for="question_title">レビューアンケートタイトル (全角35文字以内)</label>
-            <input type="text" id="question_title" name="question_title" maxlength="35" class="form-control" value="{{ form.instance.question_title }}">
+            <label for="question_title">レビューアンケートタイトル </label>
+            {{ form.question_title }}
         </div>
         <div class="form-group">
-            <label>選択項目の表示文字、アンケート後の遷移先設定</label>
+            <label>選択項目の表示文字、アンケート後の遷移先設定（＊上から評価の高い順になります。）</label>
+            
             <div class="option-group">
-                <input type="text" class="form-control inline" name="very_satisfied_label" value="{{ form.instance.very_satisfied_label }}">
+                {{ form.very_satisfied_label }}
                 <select name="very_satisfied_redirect_url" class="form-control inline">
                     <option value="google_review" {% if form.instance.very_satisfied_redirect_url == "google_review" %}selected{% endif %}>Googleレビューへ遷移</option>
-                    <option value="app_review" {% if form.instance.very_satisfied_redirect_url == "app_review" %}selected{% endif %}>質問ページに遷移</option>
+                    <option value="app_review" {% if form.instance.very_satisfied_redirect_url == "app_review" %}selected{% endif %}>追加アンケートに遷移</option>
                 </select>
             </div>
             <div class="option-group">
-                <input type="text" class="form-control inline" name="satisfied_label" value="{{ form.instance.satisfied_label }}">
+                {{ form.satisfied_label }}
                 <select name="satisfied_redirect_url" class="form-control inline">
                     <option value="google_review" {% if form.instance.satisfied_redirect_url == "google_review" %}selected{% endif %}>Googleレビューへ遷移</option>
-                    <option value="app_review" {% if form.instance.satisfied_redirect_url == "app_review" %}selected{% endif %}>質問ページに遷移</option>
+                    <option value="app_review" {% if form.instance.satisfied_redirect_url == "app_review" %}selected{% endif %}>追加アンケートに遷移</option>
                 </select>
             </div>
             <div class="option-group">
-                <input type="text" class="form-control inline" name="neutral_label" value="{{ form.instance.neutral_label }}">
+                {{ form.neutral_label }}
                 <select name="neutral_redirect_url" class="form-control inline">
                     <option value="google_review" {% if form.instance.neutral_redirect_url == "google_review" %}selected{% endif %}>Googleレビューへ遷移</option>
-                    <option value="app_review" {% if form.instance.neutral_redirect_url == "app_review" %}selected{% endif %}>質問ページに遷移</option>
+                    <option value="app_review" {% if form.instance.neutral_redirect_url == "app_review" %}selected{% endif %}>追加アンケートに遷移</option>
                 </select>
             </div>
             <div class="option-group">
-                <input type="text" class="form-control inline" name="dissatisfied_label" value="{{ form.instance.dissatisfied_label }}">
+                {{ form.dissatisfied_label }}
                 <select name="dissatisfied_redirect_url" class="form-control inline">
                     <option value="google_review" {% if form.instance.dissatisfied_redirect_url == "google_review" %}selected{% endif %}>Googleレビューへ遷移</option>
-                    <option value="app_review" {% if form.instance.dissatisfied_redirect_url == "app_review" %}selected{% endif %}>質問ページに遷移</option>
+                    <option value="app_review" {% if form.instance.dissatisfied_redirect_url == "app_review" %}selected{% endif %}>追加アンケートに遷移</option>
                 </select>
             </div>
             <div class="option-group">
-                <input type="text" class="form-control inline" name="very_dissatisfied_label" value="{{ form.instance.very_dissatisfied_label }}">
+                {{ form.very_dissatisfied_label }}
                 <select name="very_dissatisfied_redirect_url" class="form-control inline">
                     <option value="google_review" {% if form.instance.very_dissatisfied_redirect_url == "google_review" %}selected{% endif %}>Googleレビューへ遷移</option>
-                    <option value="app_review" {% if form.instance.very_dissatisfied_redirect_url == "app_review" %}selected{% endif %}>質問ページに遷移</option>
+                    <option value="app_review" {% if form.instance.very_dissatisfied_redirect_url == "app_review" %}selected{% endif %}>追加アンケートに遷移</option>
                 </select>
             </div>
         </div>
+
         <button type="submit" class="button">保存</button>
+        <div class="additional-survey-container">
+            <a href="{% url 'improve_settings' %}" class="btn-link">追加アンケートの設定</a>
+        </div>        
     </form>
     {% if messages %}
     <div id="message-container">

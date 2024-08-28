@@ -9,10 +9,11 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = config('SECRET_KEY')
 
-DEBUG = False
-ALLOWED_HOSTS = ['meotools.onrender.com']
+# DEBUG = False
+# ALLOWED_HOSTS = ['meotools.onrender.com']
 
-
+DEBUG = True
+ALLOWED_HOSTS = ['*']
 
 DATABASES = {
     'default': dj_database_url.config(

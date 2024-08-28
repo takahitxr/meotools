@@ -4,8 +4,8 @@ from django.urls import reverse_lazy
 from django.views.generic import TemplateView, ListView
 from django.views.generic.edit import FormView,UpdateView
 from django.shortcuts import render, redirect
-from .forms import UserSettingsForm, SignUpForm, ReviewForm, FeedBackForm, ImproveSettingsForm, ImproveForm, StoreNameForm
-from .models import SatisfactionChoice, User, ReviewSetting, ShopReview, ImproveSetting, ImproveResult, UserProfile
+from .forms import UserSettingsForm, SignUpForm, ReviewForm, FeedBackForm, ImproveSettingsForm, ImproveForm, StoreNameForm, ResponseSettingsForm
+from .models import SatisfactionChoice, User, ReviewSetting, ShopReview, ImproveSetting, ImproveResult, UserProfile, AutoResponse
 from django.contrib.auth import login
 from django.utils import timezone
 from django.contrib import messages
@@ -16,12 +16,12 @@ from datetime import datetime
 from django.db.models.functions import TruncMonth
 from django.db.models import Count
 from django.utils.dateparse import parse_date
+from datetime import datetime, timedelta
 
 class KanriView(LoginRequiredMixin, TemplateView):
-    template_name = 'QAS/kanri.html'
+    template_name = 'QAS/question_result.html'
     login_url = 'login'
     
-
     def dispatch(self, request, *args, **kwargs):
         self.store_code = kwargs.get('store_code')
         return super().dispatch(request, *args, **kwargs)
@@ -31,25 +31,43 @@ class KanriView(LoginRequiredMixin, TemplateView):
         store_code = self.store_code
         try:
             user_profile = UserProfile.objects.get(store_code=store_code)
-            months = ShopReview.objects.filter(user=user_profile.user)\
-                .annotate(month=TruncMonth('created_at'))\
-                .values('month')\
-                .distinct()\
-                .order_by('-month')
-            
-            context['months'] = months
+            reviews = ShopReview.objects.filter(user=user_profile.user).order_by("-created_at")
 
-            selected_month = self.request.GET.get('month')
-            if selected_month:
-                # 文字列の月をdatetimeに変換
-                start_date = parse_date(f"{selected_month}-01")
-                end_date = datetime(start_date.year, start_date.month + 1, 1)
+            preset_range = self.request.GET.get('preset_range', '12months')
+            start_date = None
+            end_date = None
+
+            if preset_range:
+                now = timezone.now()
                 
-                reviews = ShopReview.objects.filter(user=user_profile.user, created_at__gte=start_date, created_at__lt=end_date).order_by("-created_at")
-            else:
-                # 月が選択されていない場合は全てのレビューを表示
-                reviews = ShopReview.objects.filter(user=user_profile.user).order_by("-created_at")
+                if preset_range == '1week':
+                    start_date = now - timedelta(weeks=1)
+                elif preset_range == '1month':
+                    start_date = now - timedelta(days=30)
+                elif preset_range == '3months':
+                    start_date = now - timedelta(days=90)
+                elif preset_range == '6months':
+                    start_date = now - timedelta(days=180)
+                elif preset_range == '12months':
+                    start_date = now - timedelta(days=365)
+                end_date = now
 
+                if preset_range == 'custom':
+                    date_range = self.request.GET.get('date_range', None)
+                    if date_range:
+                        date_range = date_range.split(" から ")
+                        if len(date_range) == 2:
+                            start_date = parse_date(date_range[0].replace('/', '-').strip())
+                            end_date = parse_date(date_range[1].replace('/', '-').strip())
+                            if start_date:
+                                start_date = timezone.make_aware(datetime.combine(start_date, datetime.min.time()))
+                            if end_date:
+                                end_date = timezone.make_aware(datetime.combine(end_date, datetime.min.time())) + timedelta(days=1)
+
+            if start_date and end_date:
+                reviews = reviews.filter(created_at__gte=start_date, created_at__lt=end_date)
+
+            # レビュー数の集計
             review_counts = {
                 'very_satisfied': reviews.filter(rating=5).count(),
                 'satisfied': reviews.filter(rating=4).count(),
@@ -57,17 +75,16 @@ class KanriView(LoginRequiredMixin, TemplateView):
                 'dissatisfied': reviews.filter(rating=2).count(),
                 'very_dissatisfied': reviews.filter(rating=1).count(),
             }
+
             context['review_counts'] = review_counts
             context['latest_reviews'] = reviews
-
 
         except UserProfile.DoesNotExist:
             context['error_message'] = 'ストアコードが存在しません'
             context['redirect_url'] = reverse_lazy('name_setting')
             self.template_name = 'QAS/error.html'
-            print("エラー厨")
             return context
-        
+
         return context
     
     
@@ -121,11 +138,11 @@ class ReviewFormView(FormView):
             self.template_name = 'QAS/error.html'
         except ReviewSetting.DoesNotExist:
             context['error_message'] = 'レビュー項目が入力されていません。'
-            context['redirect_url'] = reverse_lazy('user_settings')
+            context['redirect_url'] = reverse_lazy('question_settings')
             self.template_name = 'QAS/error.html'
         except ImproveSetting.DoesNotExist:
             context['error_message'] = 'レビューがまだ存在しません。'
-            context['redirect_url'] = reverse_lazy('user_settings')
+            context['redirect_url'] = reverse_lazy('question_settings')
             self.template_name = 'QAS/error.html'
 
         return context
@@ -159,6 +176,7 @@ class ReviewFormView(FormView):
             review_text=reviewtext,
         )
         success_url = reverse('success', args=[store_code])
+
 
         if satisfaction == 'very_satisfied' and review_setting.very_satisfied_redirect_url == "google_review":
             return redirect(success_url)
@@ -199,8 +217,8 @@ class SuccessView(TemplateView):
 class UserSettingsView(LoginRequiredMixin, UpdateView):
     model = ReviewSetting
     form_class = UserSettingsForm
-    template_name = 'QAS/user_settings.html'
-    success_url = '/settings/'
+    template_name = 'QAS/question_settings.html'
+    success_url = '/question_settings/'
     login_url = 'login'
 
     def get_object(self, queryset=None):
@@ -210,6 +228,8 @@ class UserSettingsView(LoginRequiredMixin, UpdateView):
     def form_valid(self, form):
         messages.success(self.request, '設定が更新されました。')
         return super().form_valid(form)
+    
+
     
 class ImproveSettingsView(LoginRequiredMixin, UpdateView):
     form_class = ImproveSettingsForm
@@ -222,7 +242,6 @@ class ImproveSettingsView(LoginRequiredMixin, UpdateView):
         return obj
 
     def form_invalid(self, form):
-        # エラーページを表示
         return render(self.request, 'QAS/error.html', {'message': '必須項目が入力されていません。', 'form_errors': form.errors})
 
     def form_valid(self, form):
@@ -254,7 +273,7 @@ class SignUpView(TemplateView):
         if form.is_valid():
             user = form.save()
             login(request, user)
-            return redirect('kanri')  # ログイン後にリダイレクトするページ
+            return redirect('question_result')  # ログイン後にリダイレクトするページ
         return render(request, self.template_name, {'form': form})
 
     def get(self, request, *args, **kwargs):
@@ -288,6 +307,7 @@ class ImproveFormView(FormView):
         store_code = self.store_code
         user_profile = UserProfile.objects.get(store_code=store_code)
         improve_setting = ImproveSetting.objects.get(user=user_profile.user)
+        context['question_title'] = improve_setting.question_title
         context['question_text1'] = improve_setting.question_text1
         context['question_text2'] = improve_setting.question_text2
         context['question_text3'] = improve_setting.question_text3
@@ -321,7 +341,8 @@ class ImproveFormView(FormView):
         )
 
         success_url = reverse('success', args=[store_code])
-        return redirect(success_url)
+        finish_url = reverse('finish')
+        return redirect(finish_url)
     
 
 
@@ -393,3 +414,21 @@ def get_place_id(request):
     else:
         return JsonResponse({'error': 'Place not found'}, status=400)
     
+
+
+class ResponseSettingsView(LoginRequiredMixin, UpdateView):
+    form_class = ResponseSettingsForm
+    template_name = 'QAS/response_settings.html'
+    success_url = '/response_settings/'
+    login_url = 'login'
+
+    def get_object(self, queryset=None):
+        obj, created = AutoResponse.objects.get_or_create(user=self.request.user)
+        return obj
+
+    def form_invalid(self, form):
+        return render(self.request, 'QAS/error.html', {'message': '必須項目が入力されていません。', 'form_errors': form.errors})
+
+    def form_valid(self, form):
+        messages.success(self.request, '設定が更新されました。')
+        return super().form_valid(form)

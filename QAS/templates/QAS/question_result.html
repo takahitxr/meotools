@@ -1,0 +1,140 @@
+{% extends "QAS/base.html" %}
+
+{% block title %}管理ダッシュボード{% endblock %}
+
+{% block content %}
+
+{% load static %}
+
+<h1>ダッシュボード</h1>
+
+<form method="get" class="date-selection-form" id="dateForm">
+    <label for="preset_range">期間を選択:</label>
+    <select name="preset_range" id="preset_range" class="form-control" onchange="handleDateSelection(this.value)">
+        <option value="1week" {% if request.GET.preset_range == '1week' %}selected{% endif %}>1週間</option>
+        <option value="1month" {% if request.GET.preset_range == '1month' %}selected{% endif %}>1ヵ月</option>
+        <option value="3months" {% if request.GET.preset_range == '3months' %}selected{% endif %}>3ヶ月</option>
+        <option value="6months" {% if request.GET.preset_range == '6months' %}selected{% endif %}>6ヶ月</option>
+        <option value="12months" {% if request.GET.preset_range == '12months' or not request.GET.preset_range %}selected{% endif %}>12ヶ月</option>
+        <option value="custom" {% if request.GET.preset_range == 'custom' %}selected{% endif %}>カスタム期間</option>
+    </select>
+
+    <div id="custom-date-picker" style="display: {% if request.GET.preset_range == 'custom' %}block{% else %}none{% endif %};">
+        <label for="date_range">期間を選択:</label>
+        <input type="text" name="date_range" id="date_range" class="form-control" value="{{ request.GET.date_range }}">
+    </div>
+</form>
+
+<div class="dashboard-container">
+    <div class="stats-container">
+        <div class="chart-section">
+            <h2>レビューの統計</h2>
+            <div class="chart-label-section">
+                <div class="chart-container">
+                    <canvas id="reviewChart"></canvas>
+                </div>
+                <div class="label-container">
+                    <ul class="label-list">
+                        <li><span class="label-color-box" id="verySatisfiedColor"></span>非常に満足: <span id="verySatisfiedCountLabel">{{ review_counts.very_satisfied }}</span></li>
+                        <li><span class="label-color-box" id="satisfiedColor"></span>満足: <span id="satisfiedCountLabel">{{ review_counts.satisfied }}</span></li>
+                        <li><span class="label-color-box" id="neutralColor"></span>普通: <span id="neutralCountLabel">{{ review_counts.neutral }}</span></li>
+                        <li><span class="label-color-box" id="dissatisfiedColor"></span>不満: <span id="dissatisfiedCountLabel">{{ review_counts.dissatisfied }}</span></li>
+                        <li><span class="label-color-box" id="veryDissatisfiedColor"></span>非常に不満: <span id="veryDissatisfiedCountLabel">{{ review_counts.very_dissatisfied }}</span></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="review-table-section">
+            <h2>レビュー一覧</h2>
+            <table class="review-table">
+                <thead>
+                    <tr>
+                        <th>評価</th>
+                        <th>レビュー数</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>非常に満足</td>
+                        <td>{{ review_counts.very_satisfied }}</td>
+                    </tr>
+                    <tr>
+                        <td>満足</td>
+                        <td>{{ review_counts.satisfied }}</td>
+                    </tr>
+                    <tr>
+                        <td>普通</td>
+                        <td>{{ review_counts.neutral }}</td>
+                    </tr>
+                    <tr>
+                        <td>不満</td>
+                        <td>{{ review_counts.dissatisfied }}</td>
+                    </tr>
+                    <tr>
+                        <td>非常に不満</td>
+                        <td>{{ review_counts.very_dissatisfied }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="latest-reviews-section">
+        <h2>最新レビュー</h2>
+        <table class="latest-reviews-table">
+            <thead>
+                <tr>
+                    <th>日付</th>
+                    <th>評価</th>
+                    <th>クチコミ</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for review in latest_reviews|slice:":7" %}
+                <tr>
+                    <td>{{ review.created_at }}</td>
+                    <td>{{ review.rating }}</td>
+                    <td>{{ review.review_text }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script>
+    var verySatisfiedCount = {{ review_counts.very_satisfied }};
+    var satisfiedCount = {{ review_counts.satisfied }};
+    var neutralCount = {{ review_counts.neutral }};
+    var dissatisfiedCount = {{ review_counts.dissatisfied }};
+    var veryDissatisfiedCount = {{ review_counts.very_dissatisfied }};
+
+    function handleDateSelection(value) {
+    if (value === 'custom') {
+        document.getElementById('custom-date-picker').style.display = 'block';
+    } else {
+        document.getElementById('custom-date-picker').style.display = 'none';
+        document.getElementById('dateForm').submit();
+    }
+    ;}
+
+</script>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        flatpickr("#date_range", {
+            locale: "ja", 
+            mode: "range",
+            dateFormat: "Y/m/d",
+            onClose: function(selectedDates, dateStr, instance) {
+                document.getElementById('dateForm').submit();
+            }
+        });
+    });
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/ja.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="{% static 'js/dashboard.js' %}"></script>
+
+{% endblock %}

@@ -51,3 +51,6 @@ Thumbs.db
 *.yaml
 *.sqlite3
 .env
+
+.ipynb_checkpoints/
+.ipynb
