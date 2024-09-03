@@ -14,6 +14,9 @@
     <p>AI返信の口調を選択してください。</p>
     {{ settings_form.tone_level }}
     <p>{{ settings_form.match_language }}レビューと同じ言語で返信をする</p>
+    <p>希望のテンプレートパターンがあれば入力してください。</p>
+    {{ settings_form.response_text }}
+    <br>
     <button type="submit" name="save_settings" class="button">保存</button>
 </form>
 
@@ -21,7 +24,7 @@
 <form method="post" action="{% url 'ai-response-test' %}">
     {% csrf_token %}
     {{ test_form.as_p }}
-    <button type="submit" name="run_test" class="button">返信テスト</button>
+    <button type="submit" name="run_test" class="button">AI自動生成</button>
 </form>
 
 {% if preview_text %}

@@ -89,6 +89,7 @@ class AutoResponse(models.Model):
         notText = 'nottext', 'テキスト無し'
 
     response_text = models.TextField(max_length=1000, blank=True)
+    aitest = models.TextField(max_length=1000, blank=True)
     pattern_name = models.CharField(max_length=50, blank=True)
     filter_text = models.CharField(max_length=20, choices=FilterChoices.choices, blank=True)
     bool_text = models.CharField(max_length=20, choices=TextFilter.choices, blank=True)

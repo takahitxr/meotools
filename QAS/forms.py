@@ -141,7 +141,7 @@ class AutoResponseForm(forms.ModelForm):
             'response_text': forms.Textarea(attrs={'class': 'form-control', 'rows': 5, 'required': 'required'}),
             'is_auto': forms.CheckboxInput(attrs={'class': 'custom-switch'}),
         }
-        
+
     def clean(self):
         cleaned_data = super().clean()
         pattern_name = cleaned_data.get("pattern_name")
@@ -178,15 +178,16 @@ class ResponseSettingsForm(forms.ModelForm):
 class AiResponseForm(forms.ModelForm):
     class Meta:
         model = AiResponse
-        fields = ['tone_level', 'business_type', 'match_language']
+        fields = ['tone_level', 'business_type', 'match_language', 'response_text']
         widgets = {
             'business_type': forms.TextInput(attrs={'class': 'form-control inline', 'placeholder': '例：レストラン/焼肉屋など'}),
             'tone_level': forms.Select(attrs={'class': 'tone-form inline'}),
             'match_language': forms.CheckboxInput(attrs={'class': 'required-label'}),
+            'response_text': forms.Textarea(attrs={'class': 'form-control', 'rows': 5, 'placeholder': '例：○○様 この度はご利用いただき、誠にありがとうございます。今後もより良いサービスを提供できるよう励んでまいります。またのご利用をお待ちしております。 ○○（店舗名）'}),
         }
 
 class AiResponseTestForm(forms.Form):
     response_text = forms.CharField(
-        widget=forms.TextInput(attrs={'class': 'form-control inline', 'placeholder': '定食が安くておいしかった。'}),
-        label='返信テンプレート'
+        widget=forms.TextInput(attrs={'class': 'form-control inline', 'placeholder': 'お客様になりきりレビューを入力してください。'}),
+        label='上で設定したAI返信パターンのテストができます。'
     )
