@@ -79,28 +79,31 @@ class ImproveResult(models.Model):
     
 class AutoResponse(models.Model):
     class FilterChoices(models.TextChoices):
-        OPTION_1 = 'option1', 'Option 1'
-        OPTION_2 = 'option2', 'Option 2'
-        OPTION_3 = 'option3', 'Option 3'
-        OPTION_4 = 'option4', 'Option 4'
-    response_text1 = models.TextField(max_length=1000, blank=True)
-    response_text2 = models.TextField(max_length=1000, blank=True)
-    response_text3 = models.TextField(max_length=1000, blank=True)
-    response_text4 = models.TextField(max_length=1000, blank=True)
-    response_text5 = models.TextField(max_length=1000, blank=True)
-    filter_text1 = models.CharField(max_length=50, choices=FilterChoices.choices, blank=True)
-    filter_text2 = models.CharField(max_length=50, choices=FilterChoices.choices, blank=True)
-    filter_text3 = models.CharField(max_length=50, choices=FilterChoices.choices, blank=True)
-    filter_text4 = models.CharField(max_length=50, choices=FilterChoices.choices, blank=True)
-    filter_text5 = models.CharField(max_length=50, choices=FilterChoices.choices, blank=True)
-    is_allswitch = models.BooleanField(default=False, blank=True)
-    is_auto1 = models.BooleanField(default=False, blank=True)
-    is_auto2 = models.BooleanField(default=False, blank=True)
-    is_auto3 = models.BooleanField(default=False, blank=True)
-    is_auto4 = models.BooleanField(default=False, blank=True)
-    is_auto5 = models.BooleanField(default=False, blank=True)
+        OPTION_5 = 'option5', '★5'
+        OPTION_4 = 'option4', '★4'
+        OPTION_3 = 'option3', '★3'
+        OPTION_2 = 'option2', '★2'
+        OPTION_1 = 'option1', '★1'
+    class TextFilter(models.TextChoices):
+        onText = 'ontext', 'テキスト有り'
+        notText = 'nottext', 'テキスト無し'
+
+    response_text = models.TextField(max_length=1000, blank=True)
+    pattern_name = models.CharField(max_length=50, blank=True)
+    filter_text = models.CharField(max_length=20, choices=FilterChoices.choices, blank=True)
+    bool_text = models.CharField(max_length=20, choices=TextFilter.choices, blank=True)
+    is_auto = models.BooleanField(default=False, blank=True)
     user = models.ForeignKey(get_user_model(), on_delete=models.CASCADE)
 
     def __str__(self):
         return str(self.user)
     
+class AiResponse(models.Model):
+    response_text = models.TextField(blank=True)
+    business_type = models.CharField(max_length=100, blank=True)
+    tone_level = models.IntegerField(choices=[(1, '丁寧'), (2, '普通'), (3, 'フランク')], default=2)
+    match_language = models.BooleanField(default=True)
+    user = models.ForeignKey(get_user_model(), on_delete=models.CASCADE)
+
+    def __str__(self):
+        return str(self.user)

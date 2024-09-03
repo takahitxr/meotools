@@ -1,0 +1,35 @@
+{% extends "QAS/base.html" %}
+
+{% block title %}レビュー後の質問回答{% endblock %}
+
+{% block content %}
+
+<h1>chatGPTの返信設定</h1>
+
+<!-- 設定保存フォーム -->
+<form method="post" action="{% url 'aisettings' %}">
+    {% csrf_token %}
+    <p>お店の形態を入力してください</p>
+    {{ settings_form.business_type }}
+    <p>AI返信の口調を選択してください。</p>
+    {{ settings_form.tone_level }}
+    <p>{{ settings_form.match_language }}レビューと同じ言語で返信をする</p>
+    <button type="submit" name="save_settings" class="button">保存</button>
+</form>
+
+<!-- 返信テストフォーム -->
+<form method="post" action="{% url 'ai-response-test' %}">
+    {% csrf_token %}
+    {{ test_form.as_p }}
+    <button type="submit" name="run_test" class="button">返信テスト</button>
+</form>
+
+{% if preview_text %}
+    <h2>プレビュー：</h2>
+    <div>
+        <p>{{ preview_text }}</p>
+    </div>
+{% endif %}
+
+
+{% endblock %}

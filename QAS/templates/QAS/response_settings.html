@@ -1,0 +1,51 @@
+{% extends "QAS/base.html" %}
+
+{% block title %}設定ページ{% endblock %}
+
+{% block content %}
+
+{% load static %}
+
+<h1>Googleレビュー自動返信一覧</h1>
+<div class="container">
+    <h2>自動返信の設定</h2>
+    <form method="post">
+        {% csrf_token %}
+        <div class="form-group">
+            <label>自動返信の内容を入力してください。。</label>
+            <div class="improve-setting-group">
+                <label for="question_text1">★1の返信内容</label>
+                {{ form.response_text }}
+                <label for="is_required1" class="required-label">ON/OFF</label>
+                {{ form.is_auto }}
+            </div>
+        </div>
+        <button type="submit" name="save_improvements" class="button">保存</button>
+    </form>
+    {% if messages %}
+            <div id="message-container">
+                {% for message in messages %}
+                    <div class="message {{ message.tags }}">{{ message }}</div>
+                {% endfor %}
+            </div>
+    {% endif %}
+
+    {% if form.errors %}
+        <div class="form-errors">
+            <h3>フォームエラー</h3>
+            {{ form.errors }}
+        </div>
+    {% endif %}
+</div>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var messageContainer = document.getElementById('message-container');
+        if (messageContainer) {
+            setTimeout(function () {
+                messageContainer.style.display = 'none';
+            }, 3000);
+        }
+    });
+</script>
+
+{% endblock %}

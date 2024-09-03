@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>返信パターン設定</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .card {
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .form-group label {
+            font-weight: bold;
+        }
+        .required:after {
+            content: " *";
+            color: red;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container mt-5">
+    <div class="card p-4">
+        <h4 class="mb-4">返信パターン設定</h4>
+        <form>
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                    <label for="patternName" class="required">返信パターン名（20文字以内）</label>
+                    <input type="text" class="form-control" id="patternName" placeholder="例：★２コメント有の返信">
+                </div>
+                <div class="form-group col-md-6">
+                    <label for="autoReply">クチコミ返返信内容</label>
+                    <textarea class="form-control" id="autoReply" rows="3" placeholder="クチコミ返返信内容をご入力ください。&#13;&#10;例：この度はレビューいただきありがとうございます。ご連絡いただいた内容をスタッフと共有しサービス改善とお客様対応の改善につとめてまいります。"></textarea>
+                    <div class="form-check mt-2">
+                        <input type="checkbox" class="form-check-input" id="autoSend">
+                        <label class="form-check-label" for="autoSend">自動返信</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group col-md-4">
+                    <label for="reviewType" class="required">クチコミの内容（ネガティブ・評価・コメント有無）</label>
+                    <select id="reviewType" class="form-control">
+                        <option>感情分析評価</option>
+                        <option>ネガティブ</option>
+                        <option>ポジティブ</option>
+                    </select>
+                </div>
+                <div class="form-group col-md-4">
+                    <label for="starRating" class="required">★数の選択</label>
+                    <select id="starRating" class="form-control">
+                        <option>★1</option>
+                        <option>★2</option>
+                        <option>★3</option>
+                        <option>★4</option>
+                        <option>★5</option>
+                    </select>
+                </div>
+                <div class="form-group col-md-4">
+                    <label for="commentStatus">コメントの有無</label>
+                    <select id="commentStatus" class="form-control">
+                        <option>有り</option>
+                        <option>無し</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-row justify-content-between">
+                <button type="button" class="btn btn-danger">返信パターン削除</button>
+                <button type="submit" class="btn btn-primary">保存</button>
+            </div>
+        </form>
+    </div>
+    <div class="mt-4">
+        <button type="button" class="btn btn-secondary">＋追加</button>
+    </div>
+</div>
+
+<!-- Bootstrap JS and dependencies -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+</body>
+</html>

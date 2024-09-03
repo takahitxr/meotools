@@ -1,5 +1,5 @@
 from django import forms
-from .models import UserProfile, ReviewSetting, ShopReview, ImproveSetting, AutoResponse
+from .models import UserProfile, ReviewSetting, ShopReview, ImproveSetting, AutoResponse, AiResponse
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 
@@ -130,44 +130,63 @@ class StoreNameForm(forms.ModelForm):
         }
 
 
+class AutoResponseForm(forms.ModelForm):
+    class Meta:
+        model = AutoResponse
+        fields = ['pattern_name', 'filter_text', 'response_text', 'bool_text', 'is_auto']
+        widgets = {
+            'pattern_name': forms.TextInput(attrs={'class': 'form-control', 'required': 'required'}),
+            'filter_text': forms.Select(attrs={'class': 'form-control', 'required': 'required'}),
+            'bool_text': forms.Select(attrs={'class': 'form-control', 'required': 'required'}),
+            'response_text': forms.Textarea(attrs={'class': 'form-control', 'rows': 5, 'required': 'required'}),
+            'is_auto': forms.CheckboxInput(attrs={'class': 'custom-switch'}),
+        }
+        
+    def clean(self):
+        cleaned_data = super().clean()
+        pattern_name = cleaned_data.get("pattern_name")
+        filter_text = cleaned_data.get("filter_text")
+        bool_text = cleaned_data.get("bool_text")
+        response_text = cleaned_data.get("response_text")
+
+        if not pattern_name or not filter_text or not bool_text or not response_text:
+            raise forms.ValidationError("全てのフィールドに入力が必要です。")
+
+
 class ResponseSettingsForm(forms.ModelForm):
     class Meta:
         model = AutoResponse
         fields = [
-            'response_text1',
-            'is_auto1',
-            'response_text2',
-            'is_auto2',
-            'response_text3',
-            'is_auto3',
-            'response_text4',
-            'is_auto4',
-            'response_text5',
-            'is_auto5',
+            'response_text',
+            'is_auto',
         ]
         widgets = {
-            'response_text1': forms.TextInput(attrs={'class': 'custom-textbox inline'}),
-            'is_auto1': forms.CheckboxInput(attrs={'class': 'custom-switch'}),
-            'response_text2': forms.TextInput(attrs={'class': 'custom-textbox inline'}),
-            'is_auto2': forms.CheckboxInput(attrs={'class': 'custom-switch'}),
-            'response_text3': forms.TextInput(attrs={'class': 'custom-textbox inline'}),
-            'is_auto3': forms.CheckboxInput(attrs={'class': 'custom-switch'}),
-            'response_text4': forms.TextInput(attrs={'class': 'custom-textbox inline'}),
-            'is_auto4': forms.CheckboxInput(attrs={'class': 'custom-switch'}),
-            'response_text5': forms.TextInput(attrs={'class': 'custom-textbox inline'}),
-            'is_auto5': forms.CheckboxInput(attrs={'class': 'custom-switch'}),
+            'response_text': forms.TextInput(attrs={'class': 'custom-textbox inline'}),
+            'is_auto': forms.CheckboxInput(attrs={'class': 'custom-switch'}),
         }
 
     def clean(self):
         cleaned_data = super().clean()
         required_fields = [
-            ('response_text1', 'is_auto1'),
-            ('response_text2', 'is_auto2'),
-            ('response_text3', 'is_auto3'),
-            ('response_text4', 'is_auto4'),
-            ('response_text5', 'is_auto5'),
+            ('response_text', 'is_auto'),
         ]
 
         for question_field, required_field in required_fields:
             if cleaned_data.get(required_field) and not cleaned_data.get(question_field):
                 self.add_error(question_field, f"{self.fields[question_field].label}は必須です。")
+
+class AiResponseForm(forms.ModelForm):
+    class Meta:
+        model = AiResponse
+        fields = ['tone_level', 'business_type', 'match_language']
+        widgets = {
+            'business_type': forms.TextInput(attrs={'class': 'form-control inline', 'placeholder': '例：レストラン/焼肉屋など'}),
+            'tone_level': forms.Select(attrs={'class': 'tone-form inline'}),
+            'match_language': forms.CheckboxInput(attrs={'class': 'required-label'}),
+        }
+
+class AiResponseTestForm(forms.Form):
+    response_text = forms.CharField(
+        widget=forms.TextInput(attrs={'class': 'form-control inline', 'placeholder': '定食が安くておいしかった。'}),
+        label='返信テンプレート'
+    )

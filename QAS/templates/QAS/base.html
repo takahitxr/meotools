@@ -15,6 +15,15 @@
         <h3><span class="store-name-value"> {{ store_name }}</span></h3>
         <ul>
             <li class="menu-item has-submenu">
+                <a href="#"><span class="material-icons">dashboard</span>Googleレビュー</a>
+                <ul class="submenu">
+                    <li><a href="{% url 'question_result' store_code=store_code %}">Googleレビュー一覧</a></li>
+                    <li><a href="{% url 'improve_result_list' %}">Googleレビュー分析</a></li>
+                    <li><a href="{% url 'response_list' %}">自動返信の設定</a></li>
+                    <li><a href="{% url 'aisettings' %}">AI返信の設定</a></li>
+                </ul>
+            </li>
+            <li class="menu-item has-submenu">
                 <a href="#"><span class="material-icons">assignment</span>アンケート</a>
                 <ul class="submenu">
                     <li><a href="{% url 'question_result' store_code=store_code %}">アンケート結果</a></li>
@@ -28,7 +37,6 @@
                 <a href="#"><span class="material-icons">settings</span>設定</a>
                 <ul class="submenu">
                     <li><a href="{% url 'name_setting' %}">店舗情報の設定</a></li>                    
-                    <li><a href="{% url 'response_settings' %}">自動返信設定</a></li>
                 </ul>
             </li>
             

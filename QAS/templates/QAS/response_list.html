@@ -1,0 +1,110 @@
+{% extends "QAS/base.html" %}
+
+{% block title %}設定ページ{% endblock %}
+
+{% block content %}
+
+{% load static %}
+
+
+<div class="container">
+    <div style="display: flex; justify-content: space-between; align-items: center;">
+        <h1>Googleレビュー自動返信一覧</h1>
+        <div class="add-button-container">
+            {% if form_pairs|length < 10 %}
+                <button class="add-button" onclick="openModal()">＋新規追加</button>
+            {% else %}
+                <button class="add-button disabled-button" disabled>＋新規追加</button>
+            {% endif %}
+        </div>
+    </div>
+    ここから自動返信パターンを登録できます。登録できるパターンは10件までです。
+
+    <!-- モーダル -->
+    <div id="addModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <h2>自動返信の新規追加</h2>
+            <form method="post">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label for="id_pattern_name">パターン名</label>
+                    {{ form.pattern_name }}
+                </div>
+                <div class="form-group">
+                    <label for="id_filter_text">レビューの★</label>
+                    {{ form.filter_text }}
+                </div>
+                <div class="form-group">
+                    <label for="id_bool_text">テキストの有無</label>
+                    {{ form.bool_text }}
+                </div>
+                <div class="form-group">
+                    <label for="id_response_text">返信内容</label>
+                    {{ form.response_text }}
+                </div>
+                <div class="form-group">
+                    <div class="input-container">
+                        {{ form.is_auto }}
+                        <label for="id_is_auto" class="small-text">自動返信</label>
+                    </div>
+                </div>
+                <button type="submit" class="button">保存</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- 自動返信パターン一覧 -->
+    <div class="response-list-container">
+        <form method="post" action="{% url 'response_list' %}">
+            {% csrf_token %}
+            {% for form, auto_response in form_pairs %}
+                <input type="hidden" name="{{ form.prefix }}-response_id" value="{{ auto_response.id }}">
+                <div class="response-item">
+                    <b>{{ forloop.counter }}. パターン名</b>
+                    <div class="response-header">
+                        {{ form.pattern_name }}
+                        <label class="inline-label">
+                            {{ form.is_auto }} 自動返信
+                        </label>
+                        <a href="{% url 'delete_auto_response' auto_response.id %}" class="button delete-button">削除</a>
+                    </div>
+                    <div class="response-content">
+                        <div class="review-section">
+                            <div class="review-text">
+                                <label><strong>レビュー:</strong></label>
+                                {{ form.filter_text }}
+                            </div>
+                            <div class="bool-text">
+                                <label><strong>テキストの有無:</strong></label>
+                                {{ form.bool_text }}
+                            </div>
+                        </div>
+                        <label><strong>クチコミの内容:</strong></label>
+                        {{ form.response_text }}
+                    </div>
+                </div>
+            {% endfor %}
+            <button type="submit" name="save_changes" class="button save-button">保存</button>
+        </form>
+    </div>
+</div>
+
+<script>
+    function openModal() {
+        document.getElementById("addModal").style.display = "block";
+    }
+
+    function closeModal() {
+        document.getElementById("addModal").style.display = "none";
+    }
+
+    window.onclick = function(event) {
+        var modal = document.getElementById("addModal");
+        if (event.target == modal) {
+            modal.style.display = "none";
+        }
+    }
+</script>
+
+{% endblock %}

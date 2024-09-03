@@ -1,6 +1,8 @@
 from django.contrib import admin
 from django.urls import path
-from QAS.views import ReviewFormView, KanriView, SuccessView, UserSettingsView, SignUpView, FeedbackView, ImproveSettingsView, ImproveFormView,ImproveResultsView, StoreNameUpdateView, get_place_id, ResponseSettingsView
+from QAS.views import ReviewFormView, KanriView, SuccessView, UserSettingsView, SignUpView, FeedbackView, \
+    ImproveSettingsView, ImproveFormView,ImproveResultsView, StoreNameUpdateView, get_place_id, \
+    ResponseSettingsView, ai_response_settings_view, ai_response_test_view,auto_response_list_view,delete_auto_response
 from django.contrib.auth.views import LoginView, LogoutView
 from django.views.generic import TemplateView
 
@@ -19,6 +21,9 @@ urlpatterns = [
     path('<str:store_code>/improve/', ImproveFormView.as_view(), name='improve_page'),
     path('improve_results/', ImproveResultsView.as_view(), name='improve_result_list'),
     path('name_setting/', StoreNameUpdateView.as_view(), name='name_setting'),
-    path('response_settings/', ResponseSettingsView.as_view(), name='response_settings'),
+    path('response_list/', auto_response_list_view, name='response_list'),
+    path('delete/<int:id>/', delete_auto_response, name='delete_auto_response'),
     path('get_place_id/', get_place_id, name='get_place_id'),
+    path('aisettings/', ai_response_settings_view, name='aisettings'),
+    path('settings/test/', ai_response_test_view, name='ai-response-test'),
 ]

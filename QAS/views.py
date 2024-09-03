@@ -3,9 +3,9 @@ from django.contrib.auth.views import LoginView
 from django.urls import reverse_lazy
 from django.views.generic import TemplateView, ListView
 from django.views.generic.edit import FormView,UpdateView
-from django.shortcuts import render, redirect
-from .forms import UserSettingsForm, SignUpForm, ReviewForm, FeedBackForm, ImproveSettingsForm, ImproveForm, StoreNameForm, ResponseSettingsForm
-from .models import SatisfactionChoice, User, ReviewSetting, ShopReview, ImproveSetting, ImproveResult, UserProfile, AutoResponse
+from django.shortcuts import render, redirect, get_object_or_404
+from .forms import UserSettingsForm, SignUpForm, ReviewForm, FeedBackForm, ImproveSettingsForm, ImproveForm, StoreNameForm, ResponseSettingsForm,AiResponseForm,AiResponseTestForm,AutoResponseForm
+from .models import SatisfactionChoice, User, ReviewSetting, ShopReview, ImproveSetting, ImproveResult, UserProfile, AutoResponse, AiResponse
 from django.contrib.auth import login
 from django.utils import timezone
 from django.contrib import messages
@@ -432,3 +432,105 @@ class ResponseSettingsView(LoginRequiredMixin, UpdateView):
     def form_valid(self, form):
         messages.success(self.request, '設定が更新されました。')
         return super().form_valid(form)
+    
+def auto_response_list_view(request):
+
+    auto_responses = AutoResponse.objects.filter(user=request.user)
+    if request.method == 'POST':
+        if 'save_changes' in request.POST:
+            auto_responses = AutoResponse.objects.filter(user=request.user)
+            for auto_response in auto_responses:
+                prefix = str(auto_response.id)
+                form = AutoResponseForm(request.POST, instance=auto_response, prefix=prefix)
+                if form.is_valid():
+                    form.save()
+            return redirect('response_list')
+        else:
+            if auto_responses.count() >= 10:
+                messages.error(request, 'パターンの登録上限は10件です。')
+            else:
+                form = AutoResponseForm(request.POST)
+                if form.is_valid():
+                    auto_response = form.save(commit=False)
+                    auto_response.user = request.user
+                    auto_response.save()
+                    return redirect('response_list')
+    else:
+        form = AutoResponseForm()
+
+    form_pairs = [(AutoResponseForm(instance=auto_response, prefix=str(auto_response.id)), auto_response) for auto_response in auto_responses]
+    
+    return render(request, 'QAS/response_list.html', {
+        'form': form, 
+        'form_pairs': form_pairs,
+    })
+
+def delete_auto_response(request, id):
+    auto_response = get_object_or_404(AutoResponse, id=id, user=request.user)
+    auto_response.delete()
+    return redirect('response_list')
+
+
+
+
+class AiSettingsView(LoginRequiredMixin, UpdateView):
+    form_class = AiResponseForm
+    template_name = 'QAS/aisettings.html'
+    login_url = 'login'
+
+    def get_object(self, queryset=None):
+        obj, created = AiResponse.objects.get_or_create(user=self.request.user)
+        return obj
+
+    def form_valid(self, form):
+        messages.success(self.request, 'プロンプト設定が更新されました。')
+        return super().form_valid(form)
+    
+
+
+def ai_response_settings_view(request):
+    user = request.user
+    ai_response, created = AiResponse.objects.get_or_create(user=user)
+
+    if request.method == 'POST' and 'save_settings' in request.POST:
+        settings_form = AiResponseForm(request.POST, instance=ai_response)
+        if settings_form.is_valid():
+            settings_form.save()
+            messages.success(request, '設定が保存されました。')
+            return redirect('aisettings')
+
+    else:
+        settings_form = AiResponseForm(instance=ai_response)
+
+    test_form = AiResponseTestForm()
+    return render(request, 'QAS/aisettings.html', {
+        'settings_form': settings_form,
+        'test_form': test_form,
+        'preview_text': None
+    })
+
+
+
+
+def ai_response_test_view(request):
+    user = request.user
+    ai_response = get_object_or_404(AiResponse, user=user)
+
+    if request.method == 'POST' and 'run_test' in request.POST:
+        test_form = AiResponseTestForm(request.POST)
+        if test_form.is_valid():
+            response_text = test_form.cleaned_data['response_text']
+            
+            # ChatGPTの関数をここで呼び出し、返信テキストを生成
+            # 例えば: generated_text = chatgpt_function(response_text)
+
+            # ここではダミーのテキストを使用
+            generated_text = f"Generated Response for: {response_text}"
+
+            return render(request, 'QAS/aisettings.html', {
+                'settings_form': AiResponseForm(instance=ai_response),
+                'test_form': test_form,
+                'preview_text': generated_text
+            })
+
+    return redirect('aisettings')
