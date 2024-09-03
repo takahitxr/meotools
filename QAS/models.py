@@ -100,9 +100,15 @@ class AutoResponse(models.Model):
         return str(self.user)
     
 class AiResponse(models.Model):
+    TONE_CHOICES = [
+        ('丁寧', '丁寧'),
+        ('普通', '普通'),
+        ('フランク', 'フランク'),
+        ('相手に合わせる', '相手に合わせる')
+    ]
     response_text = models.TextField(blank=True)
     business_type = models.CharField(max_length=100, blank=True)
-    tone_level = models.IntegerField(choices=[(1, '丁寧'), (2, '普通'), (3, 'フランク')], default=2)
+    tone_level = models.CharField(max_length=20, choices=TONE_CHOICES, default='普通')
     match_language = models.BooleanField(default=True)
     user = models.ForeignKey(get_user_model(), on_delete=models.CASCADE)
 

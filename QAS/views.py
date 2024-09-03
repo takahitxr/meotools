@@ -17,6 +17,8 @@ from django.db.models.functions import TruncMonth
 from django.db.models import Count
 from django.utils.dateparse import parse_date
 from datetime import datetime, timedelta
+from .apiset import chatGPTtest
+
 
 class KanriView(LoginRequiredMixin, TemplateView):
     template_name = 'QAS/question_result.html'
@@ -512,6 +514,8 @@ def ai_response_settings_view(request):
 
 
 
+
+
 def ai_response_test_view(request):
     user = request.user
     ai_response = get_object_or_404(AiResponse, user=user)
@@ -520,17 +524,42 @@ def ai_response_test_view(request):
         test_form = AiResponseTestForm(request.POST)
         if test_form.is_valid():
             response_text = test_form.cleaned_data['response_text']
-            
-            # ChatGPTの関数をここで呼び出し、返信テキストを生成
-            # 例えば: generated_text = chatgpt_function(response_text)
+            Aisettings = AiResponse.objects.filter(user=request.user).first()
+            if Aisettings:
+                shoptype = Aisettings.business_type
+                tone_level = Aisettings.tone_level
+                match_language = Aisettings.match_language
+                restemplate = Aisettings.response_text
 
-            # ここではダミーのテキストを使用
-            generated_text = f"Generated Response for: {response_text}"
+                prompt = create_prompt(shoptype, tone_level, match_language)
+                question = create_question(restemplate, response_text)
 
-            return render(request, 'QAS/aisettings.html', {
-                'settings_form': AiResponseForm(instance=ai_response),
-                'test_form': test_form,
-                'preview_text': generated_text
-            })
+
+                generated_text = chatGPTtest(question, prompt)
+
+                return render(request, 'QAS/aisettings.html', {
+                    'settings_form': AiResponseForm(instance=ai_response),
+                    'test_form': test_form,
+                    'preview_text': generated_text
+                })
 
     return redirect('aisettings')
+
+
+
+def create_prompt(shoptype, tone_level, match_language):
+    prompt = f"あなたは{shoptype}の店長です。" if shoptype else ""
+    prompt += f"口調は{tone_level}にしてください。"
+
+    if match_language:
+        prompt += "レビューと同じ言語を使ってください。"
+    else:
+        prompt += "日本語で返事してください。"
+
+    return prompt
+
+def create_question(restemplate, response_text):
+    if restemplate:
+        return f"{restemplate}/この部分より前のテンプレートに沿って次のレビューに返信してください。{response_text}"
+    else:
+        return f"以下のレビューに返信してください。{response_text}"
