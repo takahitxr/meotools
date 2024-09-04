@@ -560,6 +560,6 @@ def create_prompt(shoptype, tone_level, match_language):
 
 def create_question(restemplate, response_text):
     if restemplate:
-        return f"{restemplate}/この部分より前のテンプレートに沿って次のレビューに返信してください。{response_text}"
+        return f"{restemplate}/この部分より前の情報を考慮して次のレビューに返信してください。{response_text}"
     else:
         return f"以下のレビューに返信してください。{response_text}"

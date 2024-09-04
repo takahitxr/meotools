@@ -189,5 +189,4 @@ class AiResponseForm(forms.ModelForm):
 class AiResponseTestForm(forms.Form):
     response_text = forms.CharField(
         widget=forms.TextInput(attrs={'class': 'form-control inline', 'placeholder': 'お客様になりきりレビューを入力してください。'}),
-        label='上で設定したAI返信パターンのテストができます。'
     )

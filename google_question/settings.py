@@ -13,6 +13,7 @@ DEBUG = False
 ALLOWED_HOSTS = ['meotools.onrender.com']
 
 
+
 DATABASES = {
     'default': dj_database_url.config(
         default=config('DBURL'),

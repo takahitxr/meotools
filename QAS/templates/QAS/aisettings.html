@@ -7,6 +7,8 @@
 <h1>chatGPTの返信設定</h1>
 Googleレビュー一覧の個別レビュー返信で使用できる、chatGPTの返信に関する設定です。
 返信テンプレートやAI返信の口調などの変更ができます。
+<br>
+
 <!-- 設定保存フォーム -->
 <form method="post" action="{% url 'aisettings' %}">
     {% csrf_token %}
@@ -15,7 +17,7 @@ Googleレビュー一覧の個別レビュー返信で使用できる、chatGPT�
     <p>AI返信の口調を選択してください。</p>
     {{ settings_form.tone_level }}
     <p>{{ settings_form.match_language }}レビューと同じ言語で返信をする</p>
-    <p>希望のテンプレートパターンがあれば入力してください。</p>
+    <p>希望の返信パターンがあれば入力してください。</p>
     {{ settings_form.response_text }}
     <br>
     <button type="submit" name="save_settings" class="button">保存</button>
@@ -24,7 +26,8 @@ Googleレビュー一覧の個別レビュー返信で使用できる、chatGPT�
 <!-- 返信テストフォーム -->
 <form method="post" action="{% url 'ai-response-test' %}">
     {% csrf_token %}
-    {{ test_form.as_p }}
+    上で設定したAI返信パターンのテストができます。<span class="small-text">  ＊保存ボタンを押してからご利用ください。</span>
+    {{ test_form.response_text }}
     <button type="submit" name="run_test" class="button">AI自動生成</button>
 </form>
 
