@@ -183,7 +183,7 @@ class AiResponseForm(forms.ModelForm):
             'business_type': forms.TextInput(attrs={'class': 'form-control inline', 'placeholder': '例：レストラン/焼肉屋など'}),
             'tone_level': forms.Select(attrs={'class': 'tone-form inline'}),
             'match_language': forms.CheckboxInput(attrs={'class': 'required-label'}),
-            'response_text': forms.Textarea(attrs={'class': 'form-control', 'rows': 5, 'placeholder': '例：○○様 この度はご利用いただき、誠にありがとうございます。今後もより良いサービスを提供できるよう励んでまいります。またのご利用をお待ちしております。 ○○（店舗名）'}),
+            'response_text': forms.Textarea(attrs={'class': 'form-control', 'rows': 5, 'placeholder': '例：返信文の最初には○○様を入れてください。/ ネガティブな内容には特に丁寧に返信してください。など'}),
         }
 
 class AiResponseTestForm(forms.Form):
